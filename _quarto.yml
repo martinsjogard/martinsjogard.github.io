@@ -11,6 +11,8 @@ website:
         menu:
           - text: "Power Analysis for LMMs"
             href: posts/power-analysis-lmm/index.qmd
+          - text: "FWER Correction, Part 1"
+            href: posts/fwer-correction-part1/index.qmd
     right:
       - text: "About"
         href: about.qmd
@@ -25,3 +27,7 @@ metadata:
   author: "Martin Sjogard"
   keywords: ["Martin Sjogard", "Martin Sjoegaard", "clinical data scientist", "neuroscience", "Harvard", "neuroimaging", "biomarker discovery"]
   description: "Official website of Martin Sjogard (also known as Martin Sjoegaard), clinical data scientist and postdoctoral researcher in neuroimaging and data science."
+
+resources:
+  - posts/power-analysis-lmm/index.qmd
+  - posts/fwer-correction-part1/index.qmd
