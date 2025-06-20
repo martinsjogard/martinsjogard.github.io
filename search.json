@@ -4,118 +4,55 @@
     "href": "posts/power-analysis-lmm/index.html",
     "title": "Power Analysis for Linear Mixed Models: What You Need to Know",
     "section": "",
-    "text": "Power analysis for linear mixed models (LMMs) is crucial when designing experiments involving repeated measures or hierarchical data structures. In this post, we demonstrate how to simulate LMM data and explore the impact of sample size on statistical power — without requiring specialized packages like simr."
+    "text": "This is a stub version of the LMM power analysis blog post. Actual content goes here."
   },
   {
-    "objectID": "posts/power-analysis-lmm/index.html#introduction",
-    "href": "posts/power-analysis-lmm/index.html#introduction",
+    "objectID": "posts/power-analysis-lmm/index.html#intro",
+    "href": "posts/power-analysis-lmm/index.html#intro",
     "title": "Power Analysis for Linear Mixed Models: What You Need to Know",
     "section": "",
-    "text": "Power analysis for linear mixed models (LMMs) is crucial when designing experiments involving repeated measures or hierarchical data structures. In this post, we demonstrate how to simulate LMM data and explore the impact of sample size on statistical power — without requiring specialized packages like simr."
-  },
-  {
-    "objectID": "posts/power-analysis-lmm/index.html#simulate-repeated-measures-data",
-    "href": "posts/power-analysis-lmm/index.html#simulate-repeated-measures-data",
-    "title": "Power Analysis for Linear Mixed Models: What You Need to Know",
-    "section": "Simulate Repeated Measures Data",
-    "text": "Simulate Repeated Measures Data\nlibrary(lme4) set.seed(123)\nn_subjects &lt;- 30 n_obs &lt;- 5 subject &lt;- factor(rep(1:n_subjects, each = n_obs)) time &lt;- rep(1:n_obs, n_subjects) intercept &lt;- 2 slope &lt;- 0.5 subject_effect &lt;- rnorm(n_subjects, 0, 1) y &lt;- intercept + slope * time + rep(subject_effect, each = n_obs) + rnorm(n_subjects * n_obs, 0, 1)\ndata &lt;- data.frame(subject, time, y)\nmodel &lt;- lmer(y ~ time + (1 | subject), data = data) summary(model)\nsimulate_power &lt;- function(n_subjects, n_sim = 100) { p_vals &lt;- replicate(n_sim, { subject &lt;- factor(rep(1:n_subjects, each = n_obs)) subject_effect &lt;- rnorm(n_subjects, 0, 1) y &lt;- intercept + slope * time + rep(subject_effect, each = n_obs) + rnorm(n_subjects * n_obs, 0, 1) df &lt;- data.frame(subject, time, y) m &lt;- lmer(y ~ time + (1 | subject), data = df) coef &lt;- summary(m)$coefficients coef[“time”, “Pr(&gt;|t|)”] }) mean(p_vals &lt; 0.05) }\nsimulate_power(30) # Estimated power at n = 30 subjects"
+    "text": "This is a stub version of the LMM power analysis blog post. Actual content goes here."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Martin Sjogard",
     "section": "",
-    "text": "I am a clinical data scientist working as a postdoctoral research fellow in the Sleep, Cognition and Neuropsychology lab at Massachusetts General Hospital and at Harvard Medical School.\nMy expertise is in statistical and computational analysis of health-related data, with a focus on neuroimaging and electrophysiological signals in neuropsychiatric disorders."
+    "text": "I am a clinical data scientist working as a postdoctoral research fellow in the Sleep, Cognition and Neuropsychology lab at Massachusetts General Hospital and a postdoctoral research fellow at Harvard Medical School.\nMy expertise is in statistical and computational analysis of health-related data, with a focus on neuroimaging and electrophysiological signals in neuropsychiatric disorders. I develop validated, reproducible analysis pipelines and apply advanced methods (e.g., survival analysis, multivariate modeling, signal processing) to support translational research and biomarker discovery."
   },
   {
     "objectID": "index.html#about-me",
     "href": "index.html#about-me",
     "title": "Martin Sjogard",
     "section": "",
-    "text": "I am a clinical data scientist working as a postdoctoral research fellow in the Sleep, Cognition and Neuropsychology lab at Massachusetts General Hospital and at Harvard Medical School.\nMy expertise is in statistical and computational analysis of health-related data, with a focus on neuroimaging and electrophysiological signals in neuropsychiatric disorders."
+    "text": "I am a clinical data scientist working as a postdoctoral research fellow in the Sleep, Cognition and Neuropsychology lab at Massachusetts General Hospital and a postdoctoral research fellow at Harvard Medical School.\nMy expertise is in statistical and computational analysis of health-related data, with a focus on neuroimaging and electrophysiological signals in neuropsychiatric disorders. I develop validated, reproducible analysis pipelines and apply advanced methods (e.g., survival analysis, multivariate modeling, signal processing) to support translational research and biomarker discovery."
   },
   {
     "objectID": "index.html#blog-posts",
     "href": "index.html#blog-posts",
     "title": "Martin Sjogard",
     "section": "Blog Posts",
-    "text": "Blog Posts\ncontents: posts sort: “date desc” type: default"
+    "text": "Blog Posts\n\nPower Analysis for Linear Mixed Models: What You Need to Know\nPermutation-Based FWER Correction, Part 1"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This page will eventually describe my research interests, collaborations, and contact details."
   },
   {
     "objectID": "posts/fwer-correction-part1/index.html",
     "href": "posts/fwer-correction-part1/index.html",
     "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
     "section": "",
-    "text": "In this blog series, I will explore permutation-based family-wise error rate (FWER) correction. Before diving into permutation tests and error control, I will lay some commonly misunderstood groundwork by covering core concepts in hypothesis testing: null and alternative hypotheses, test statistics, Type I errors, p-values, and significance testing — all illustrated with hands-on R code."
+    "text": "This is a stub version of the FWER correction blog post. Actual content goes here."
   },
   {
-    "objectID": "posts/fwer-correction-part1/index.html#introduction",
-    "href": "posts/fwer-correction-part1/index.html#introduction",
+    "objectID": "posts/fwer-correction-part1/index.html#intro",
+    "href": "posts/fwer-correction-part1/index.html#intro",
     "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
     "section": "",
-    "text": "In this blog series, I will explore permutation-based family-wise error rate (FWER) correction. Before diving into permutation tests and error control, I will lay some commonly misunderstood groundwork by covering core concepts in hypothesis testing: null and alternative hypotheses, test statistics, Type I errors, p-values, and significance testing — all illustrated with hands-on R code."
-  },
-  {
-    "objectID": "posts/fwer-correction-part1/index.html#null-and-alternative-hypotheses",
-    "href": "posts/fwer-correction-part1/index.html#null-and-alternative-hypotheses",
-    "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
-    "section": "Null and Alternative Hypotheses",
-    "text": "Null and Alternative Hypotheses\nA statistical hypothesis is a testable claim about a population or process. We typically test:\n\n\\(H_0\\): The null hypothesis — no effect or no difference\n\n\\(H_1\\): The alternative hypothesis — a meaningful effect or difference\n\nExample: - \\(H_0\\): A drug does not affect blood pressure - \\(H_1\\): The drug does affect blood pressure\nIn neuroscience: - \\(H_0\\): No difference in brain activity between task and rest - \\(H_1\\): A significant difference exists\nWe assume \\(H_0\\) is true and seek evidence to reject it in favor of \\(H_1\\)."
-  },
-  {
-    "objectID": "posts/fwer-correction-part1/index.html#test-statistics-and-null-distributions",
-    "href": "posts/fwer-correction-part1/index.html#test-statistics-and-null-distributions",
-    "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
-    "section": "Test Statistics and Null Distributions",
-    "text": "Test Statistics and Null Distributions\nA test statistic is a numeric summary (e.g., a mean difference, \\(t\\)-value, or count) used to compare data against \\(H_0\\).\nThe distribution of the test statistic assuming \\(H_0\\) is true is called the null distribution. It provides a reference for assessing how “surprising” the observed statistic is under \\(H_0\\)."
-  },
-  {
-    "objectID": "posts/fwer-correction-part1/index.html#type-i-error-and-significance-level",
-    "href": "posts/fwer-correction-part1/index.html#type-i-error-and-significance-level",
-    "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
-    "section": "Type I Error and Significance Level",
-    "text": "Type I Error and Significance Level\nThere are two main types of errors:\n\nType I error: Rejecting \\(H_0\\) when it’s true (false positive)\n\nType II error: Failing to reject \\(H_0\\) when \\(H_1\\) is true (false negative)\n\nThe significance level \\(\u0007lpha\\) (often 0.05) is the acceptable probability of a Type I error."
-  },
-  {
-    "objectID": "posts/fwer-correction-part1/index.html#interpreting-rejection-of-h_0",
-    "href": "posts/fwer-correction-part1/index.html#interpreting-rejection-of-h_0",
-    "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
-    "section": "Interpreting Rejection of \\(H_0\\)",
-    "text": "Interpreting Rejection of \\(H_0\\)\n\nRejecting \\(H_0\\): Evidence supports \\(H_1\\) (statistically significant)\nNot rejecting \\(H_0\\): Data are consistent with \\(H_0\\); not enough evidence for \\(H_1\\)"
-  },
-  {
-    "objectID": "posts/fwer-correction-part1/index.html#understanding-p-values",
-    "href": "posts/fwer-correction-part1/index.html#understanding-p-values",
-    "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
-    "section": "Understanding p-Values",
-    "text": "Understanding p-Values\nThe p-value measures how surprising the observed data are under \\(H_0\\).\n\nSmall p-value → evidence against \\(H_0\\)\nLarge p-value → data are typical under \\(H_0\\)\n\n\nA p-value is not the probability that \\(H_0\\) is true."
-  },
-  {
-    "objectID": "posts/fwer-correction-part1/index.html#r-example-testing-a-coin-for-fairness",
-    "href": "posts/fwer-correction-part1/index.html#r-example-testing-a-coin-for-fairness",
-    "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
-    "section": "R Example: Testing a Coin for Fairness",
-    "text": "R Example: Testing a Coin for Fairness\nWe test whether a coin is fair using 20 flips.\n\nset.seed(42)\nn &lt;- 20\nflips &lt;- sample(c(\"H\", \"T\"), size = n, replace = TRUE, prob = c(0.5, 0.5))\nnum_heads &lt;- sum(flips == \"H\")\nnum_heads\n\n[1] 13\n\ntest_result &lt;- binom.test(num_heads, n, p = 0.5, alternative = \"two.sided\")\ntest_result\n\n\n    Exact binomial test\n\ndata:  num_heads and n\nnumber of successes = 13, number of trials = 20, p-value = 0.2632\nalternative hypothesis: true probability of success is not equal to 0.5\n95 percent confidence interval:\n 0.4078115 0.8460908\nsample estimates:\nprobability of success \n                  0.65 \n\n\nInterpretation: - If p &gt; 0.05 → coin is plausibly fair\n- If p ≤ 0.05 → reject \\(H_0\\), suspect bias"
-  },
-  {
-    "objectID": "posts/fwer-correction-part1/index.html#simulated-p-value-for-extreme-result",
-    "href": "posts/fwer-correction-part1/index.html#simulated-p-value-for-extreme-result",
-    "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
-    "section": "Simulated p-Value for Extreme Result",
-    "text": "Simulated p-Value for Extreme Result\n\n# Suppose we observed 17 heads out of 20\np_val &lt;- sum(dbinom(17:20, size = 20, prob = 0.5)) * 2  # two-tailed\np_val\n\n[1] 0.002576828"
-  },
-  {
-    "objectID": "posts/fwer-correction-part1/index.html#simulation-of-null-distribution",
-    "href": "posts/fwer-correction-part1/index.html#simulation-of-null-distribution",
-    "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
-    "section": "Simulation of Null Distribution",
-    "text": "Simulation of Null Distribution\n\nset.seed(123)\nn &lt;- 100\np_null &lt;- 0.5\nobserved &lt;- 60\n\n# Analytical p-value\np_value_theory &lt;- 1 - pbinom(observed - 1, size = n, prob = p_null)\n\n# Simulated null distribution\nreps &lt;- 10000\nsim_counts &lt;- rbinom(reps, size = n, prob = p_null)\np_value_sim &lt;- mean(sim_counts &gt;= observed)\n\n# Plot\nhist(sim_counts, breaks = 20, col = \"skyblue\",\n     main = \"Null Distribution of Heads Count (100 Flips)\",\n     xlab = \"Number of heads\")\nabline(v = observed, col = \"red\", lwd = 2)"
-  },
-  {
-    "objectID": "posts/fwer-correction-part1/index.html#conclusion",
-    "href": "posts/fwer-correction-part1/index.html#conclusion",
-    "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
-    "section": "Conclusion",
-    "text": "Conclusion\n\nUnderstanding hypothesis testing, null distributions, and p-values lays the foundation for controlling false positives in multiple comparisons. In the next post, we’ll expand to full null distributions, simulation-based inference, and the rationale behind permutation testing.\nStay tuned for Part 2."
+    "text": "This is a stub version of the FWER correction blog post. Actual content goes here."
   }
 ]
