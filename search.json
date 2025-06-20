@@ -35,11 +35,11 @@
     "text": "I am a clinical data scientist working as a postdoctoral research fellow in the Sleep, Cognition and Neuropsychology lab at Massachusetts General Hospital and at Harvard Medical School.\nMy expertise is in statistical and computational analysis of health-related data, with a focus on neuroimaging and electrophysiological signals in neuropsychiatric disorders."
   },
   {
-    "objectID": "index.html#featured-blog-posts",
-    "href": "index.html#featured-blog-posts",
+    "objectID": "index.html#blog-posts",
+    "href": "index.html#blog-posts",
     "title": "Martin Sjogard",
-    "section": "Featured Blog Posts",
-    "text": "Featured Blog Posts\n\nPower Analysis for Linear Mixed Models: What You Need to Know\nPermutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals"
+    "section": "Blog Posts",
+    "text": "Blog Posts\ncontents: posts sort: “date desc” type: default"
   },
   {
     "objectID": "posts/fwer-correction-part1/index.html",
