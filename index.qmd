@@ -1,0 +1,10 @@
+---
+title: "Welcome to the NeuroStats Blog"
+format: html
+---
+
+## About This Blog
+
+This blog showcases statistical and data science techniques applied to neuroscience, with a focus on reproducible R and Python code.
+
+Explore detailed walkthroughs of advanced analysis methods like linear mixed models, power analysis, and more.

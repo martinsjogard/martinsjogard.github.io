@@ -1,0 +1,6 @@
+---
+title: "About Me"
+format: html
+---
+
+I'm a postdoctoral neuroscience researcher interested in statistical modeling, reproducible analysis, and translating complex data into actionable insights for biotech and pharma applications.

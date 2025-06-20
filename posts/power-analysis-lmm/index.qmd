@@ -1,0 +1,60 @@
+---
+title: "Power Analysis for Linear Mixed Models: What You Need to Know"
+format: html
+author: "Your Name"
+date: today
+categories: [statistics, R, mixed models, power analysis]
+---
+
+## Introduction
+
+Power analysis for linear mixed models (LMMs) is crucial when designing experiments involving repeated measures or hierarchical data structures. In this post, we’ll demonstrate how to use simulation-based methods with the `simr` package in R to estimate power for LMMs.
+
+## Setup
+
+We’ll simulate a dataset mimicking a repeated-measures experiment, fit a mixed model, and then use `simr` for power estimation.
+
+```{r}
+# Load required libraries
+library(lme4)
+library(simr)
+library(ggplot2)
+```
+
+## Simulate Data
+
+```{r}
+set.seed(123)
+n_subjects <- 30
+n_obs <- 5
+subject <- factor(rep(1:n_subjects, each = n_obs))
+time <- rep(1:n_obs, n_subjects)
+intercept <- 2
+slope <- 0.5
+subject_effect <- rnorm(n_subjects, 0, 1)
+y <- intercept + slope * time + rep(subject_effect, each = n_obs) + rnorm(n_subjects * n_obs, 0, 1)
+
+data <- data.frame(subject, time, y)
+```
+
+## Fit the Linear Mixed Model
+
+```{r}
+model <- lmer(y ~ time + (1 | subject), data = data)
+summary(model)
+```
+
+## Power Analysis with `simr`
+
+We extend the model to a larger sample size and compute power for detecting the fixed effect of time.
+
+```{r}
+model_extended <- extend(model, along="subject", n=50)
+power_result <- powerSim(model_extended, fixed("time", "t"), nsim=100)
+power_result
+```
+
+## Conclusion
+
+Simulation-based power analysis is an effective approach for complex models like LMMs. The `simr` package makes it straightforward to plan your studies with realistic expectations about effect detectability.
+
