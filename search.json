@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "posts/power-analysis-lmm/index.html",
+    "href": "posts/power-analysis-lmm/index.html",
+    "title": "Power Analysis for Linear Mixed Models: What You Need to Know",
+    "section": "",
+    "text": "Power analysis for linear mixed models (LMMs) is crucial when designing experiments involving repeated measures or hierarchical data structures. In this post, we demonstrate how to simulate LMM data and explore the impact of sample size on statistical power — without requiring specialized packages like simr."
+  },
+  {
+    "objectID": "posts/power-analysis-lmm/index.html#introduction",
+    "href": "posts/power-analysis-lmm/index.html#introduction",
+    "title": "Power Analysis for Linear Mixed Models: What You Need to Know",
+    "section": "",
+    "text": "Power analysis for linear mixed models (LMMs) is crucial when designing experiments involving repeated measures or hierarchical data structures. In this post, we demonstrate how to simulate LMM data and explore the impact of sample size on statistical power — without requiring specialized packages like simr."
+  },
+  {
+    "objectID": "posts/power-analysis-lmm/index.html#simulate-repeated-measures-data",
+    "href": "posts/power-analysis-lmm/index.html#simulate-repeated-measures-data",
+    "title": "Power Analysis for Linear Mixed Models: What You Need to Know",
+    "section": "Simulate Repeated Measures Data",
+    "text": "Simulate Repeated Measures Data\nlibrary(lme4) set.seed(123)\nn_subjects &lt;- 30 n_obs &lt;- 5 subject &lt;- factor(rep(1:n_subjects, each = n_obs)) time &lt;- rep(1:n_obs, n_subjects) intercept &lt;- 2 slope &lt;- 0.5 subject_effect &lt;- rnorm(n_subjects, 0, 1) y &lt;- intercept + slope * time + rep(subject_effect, each = n_obs) + rnorm(n_subjects * n_obs, 0, 1)\ndata &lt;- data.frame(subject, time, y)\nmodel &lt;- lmer(y ~ time + (1 | subject), data = data) summary(model)\nsimulate_power &lt;- function(n_subjects, n_sim = 100) { p_vals &lt;- replicate(n_sim, { subject &lt;- factor(rep(1:n_subjects, each = n_obs)) subject_effect &lt;- rnorm(n_subjects, 0, 1) y &lt;- intercept + slope * time + rep(subject_effect, each = n_obs) + rnorm(n_subjects * n_obs, 0, 1) df &lt;- data.frame(subject, time, y) m &lt;- lmer(y ~ time + (1 | subject), data = df) coef &lt;- summary(m)$coefficients coef[“time”, “Pr(&gt;|t|)”] }) mean(p_vals &lt; 0.05) }\nsimulate_power(30) # Estimated power at n = 30 subjects"
+  }
+]
