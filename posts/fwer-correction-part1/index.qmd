@@ -125,6 +125,9 @@ abline(v = observed, col = "red", lwd = 2)
 
 ## Conclusion
 
+<!-- Trigger build -->
+
+
 Understanding hypothesis testing, null distributions, and p-values lays the foundation for controlling false positives in multiple comparisons. In the next post, we'll expand to full null distributions, simulation-based inference, and the rationale behind permutation testing.
 
 Stay tuned for **Part 2**.
