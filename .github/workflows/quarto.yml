@@ -30,7 +30,6 @@ jobs:
             }
           }
           install_packages(c("lme4", "ggplot2", "remotes"))
-          remotes::install_github("pitakakariki/simr")
         shell: Rscript {0}
 
       - name: Render the site
