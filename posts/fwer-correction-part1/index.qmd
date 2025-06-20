@@ -1,0 +1,12 @@
+---
+title: "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals"
+author: "Martin Sjogard"
+date: 2025-06-20
+format: html
+page: true
+categories: [statistics, R, multiple comparisons]
+---
+
+## Intro
+
+This is a stub version of the FWER correction blog post. Actual content goes here.

@@ -1,0 +1,23 @@
+project:
+  type: website
+
+website:
+  title: "Martin Sjogard"
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Posts"
+        menu:
+          - text: "Power Analysis for LMMs"
+            href: posts/power-analysis-lmm/index.qmd
+          - text: "FWER Correction, Part 1"
+            href: posts/fwer-correction-part1/index.qmd
+    right:
+      - text: "About"
+        href: about.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
