@@ -31,3 +31,9 @@ metadata:
 resources:
   - posts/power-analysis-lmm/index.qmd
   - posts/fwer-correction-part1/index.qmd
+
+render:
+  - index.qmd
+  - about.qmd
+  - posts/power-analysis-lmm/index.qmd
+  - posts/fwer-correction-part1/index.qmd
