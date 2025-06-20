@@ -46,14 +46,14 @@
     "href": "posts/fwer-correction-part1/index.html",
     "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
     "section": "",
-    "text": "In this blog series, we explore permutation-based family-wise error rate (FWER) correction. Before diving into permutation tests and error control, we lay the groundwork by covering core concepts in hypothesis testing: null and alternative hypotheses, test statistics, Type I errors, p-values, and significance testing — all illustrated with hands-on R code."
+    "text": "In this blog series, I will explore permutation-based family-wise error rate (FWER) correction. Before diving into permutation tests and error control, I will lay some commonly misunderstood groundwork by covering core concepts in hypothesis testing: null and alternative hypotheses, test statistics, Type I errors, p-values, and significance testing — all illustrated with hands-on R code."
   },
   {
     "objectID": "posts/fwer-correction-part1/index.html#introduction",
     "href": "posts/fwer-correction-part1/index.html#introduction",
     "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
     "section": "",
-    "text": "In this blog series, we explore permutation-based family-wise error rate (FWER) correction. Before diving into permutation tests and error control, we lay the groundwork by covering core concepts in hypothesis testing: null and alternative hypotheses, test statistics, Type I errors, p-values, and significance testing — all illustrated with hands-on R code."
+    "text": "In this blog series, I will explore permutation-based family-wise error rate (FWER) correction. Before diving into permutation tests and error control, I will lay some commonly misunderstood groundwork by covering core concepts in hypothesis testing: null and alternative hypotheses, test statistics, Type I errors, p-values, and significance testing — all illustrated with hands-on R code."
   },
   {
     "objectID": "posts/fwer-correction-part1/index.html#null-and-alternative-hypotheses",
