@@ -1,0 +1,27 @@
+project:
+  type: website
+
+website:
+  title: "Martin Sjogard"
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Posts"
+        menu:
+          - text: "Power Analysis for LMMs"
+            href: posts/power-analysis-lmm/index.qmd
+    right:
+      - text: "About"
+        href: about.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+
+metadata:
+  title: "Martin Sjogard | Clinical Data Scientist"
+  author: "Martin Sjogard"
+  keywords: ["Martin Sjogard", "Martin Sjoegaard", "clinical data scientist", "neuroscience", "Harvard", "neuroimaging", "biomarker discovery"]
+  description: "Official website of Martin Sjogard (also known as Martin Sjoegaard), clinical data scientist and postdoctoral researcher in neuroimaging and data science."
