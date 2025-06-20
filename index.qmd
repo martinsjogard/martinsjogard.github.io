@@ -11,7 +11,10 @@ My expertise is in statistical and computational analysis of health-related data
 
 ---
 
-## Featured Blog Posts
+## Blog Posts {.listing}
 
-- **[Power Analysis for Linear Mixed Models: What You Need to Know](posts/power-analysis-lmm/index.qmd)**
-- **[Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals](posts/fwer-correction-part1/index.qmd)**
+```{listing}
+contents: posts
+sort: "date desc"
+type: default
+
