@@ -4,7 +4,7 @@ author: "Martin Sjogard"
 date: 2025-06-20
 format: html
 categories: [statistics, R, hypothesis testing, neuroscience]
-website: true
+page: true
 
 ---
 
