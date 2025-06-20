@@ -11,7 +11,7 @@
 <meta name="keywords" content="Martin Sjogard, Martin Sjoegaard, clinical data scientist, neuroscience, Harvard, neuroimaging, biomarker discovery">
 <meta name="description" content="Official website of Martin Sjogard (also known as Martin Sjoegaard), clinical data scientist and postdoctoral researcher in neuroimaging and data science.">
 
-<title>Martin Sjogard - Power Analysis for Linear Mixed Models: What You Need to Know</title>
+<title>Martin Sjogard - Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,6 +23,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -71,6 +105,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -129,7 +192,15 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#simulate-repeated-measures-data" id="toc-simulate-repeated-measures-data" class="nav-link" data-scroll-target="#simulate-repeated-measures-data">Simulate Repeated Measures Data</a></li>
+  <li><a href="#null-and-alternative-hypotheses" id="toc-null-and-alternative-hypotheses" class="nav-link" data-scroll-target="#null-and-alternative-hypotheses">Null and Alternative Hypotheses</a></li>
+  <li><a href="#test-statistics-and-null-distributions" id="toc-test-statistics-and-null-distributions" class="nav-link" data-scroll-target="#test-statistics-and-null-distributions">Test Statistics and Null Distributions</a></li>
+  <li><a href="#type-i-error-and-significance-level" id="toc-type-i-error-and-significance-level" class="nav-link" data-scroll-target="#type-i-error-and-significance-level">Type I Error and Significance Level</a></li>
+  <li><a href="#interpreting-rejection-of-h_0" id="toc-interpreting-rejection-of-h_0" class="nav-link" data-scroll-target="#interpreting-rejection-of-h_0">Interpreting Rejection of <span class="math inline">\(H_0\)</span></a></li>
+  <li><a href="#understanding-p-values" id="toc-understanding-p-values" class="nav-link" data-scroll-target="#understanding-p-values">Understanding p-Values</a></li>
+  <li><a href="#r-example-testing-a-coin-for-fairness" id="toc-r-example-testing-a-coin-for-fairness" class="nav-link" data-scroll-target="#r-example-testing-a-coin-for-fairness">R Example: Testing a Coin for Fairness</a></li>
+  <li><a href="#simulated-p-value-for-extreme-result" id="toc-simulated-p-value-for-extreme-result" class="nav-link" data-scroll-target="#simulated-p-value-for-extreme-result">Simulated p-Value for Extreme Result</a></li>
+  <li><a href="#simulation-of-null-distribution" id="toc-simulation-of-null-distribution" class="nav-link" data-scroll-target="#simulation-of-null-distribution">Simulation of Null Distribution</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -138,12 +209,12 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Power Analysis for Linear Mixed Models: What You Need to Know</h1>
+<h1 class="title">Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals</h1>
   <div class="quarto-categories">
     <div class="quarto-category">statistics</div>
     <div class="quarto-category">R</div>
-    <div class="quarto-category">mixed models</div>
-    <div class="quarto-category">power analysis</div>
+    <div class="quarto-category">hypothesis testing</div>
+    <div class="quarto-category">neuroscience</div>
   </div>
   </div>
 
@@ -186,17 +257,138 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Power analysis for linear mixed models (LMMs) is crucial when designing experiments involving repeated measures or hierarchical data structures. In this post, we demonstrate how to simulate LMM data and explore the impact of sample size on statistical power — without requiring specialized packages like <code>simr</code>.</p>
+<p>In this blog series, we explore permutation-based family-wise error rate (FWER) correction. Before diving into permutation tests and error control, we lay the groundwork by covering core concepts in hypothesis testing: null and alternative hypotheses, test statistics, Type I errors, p-values, and significance testing — all illustrated with hands-on R code.</p>
+<hr>
 </section>
-<section id="simulate-repeated-measures-data" class="level2">
-<h2 class="anchored" data-anchor-id="simulate-repeated-measures-data">Simulate Repeated Measures Data</h2>
-<p>library(lme4) set.seed(123)</p>
-<p>n_subjects &lt;- 30 n_obs &lt;- 5 subject &lt;- factor(rep(1:n_subjects, each = n_obs)) time &lt;- rep(1:n_obs, n_subjects) intercept &lt;- 2 slope &lt;- 0.5 subject_effect &lt;- rnorm(n_subjects, 0, 1) y &lt;- intercept + slope * time + rep(subject_effect, each = n_obs) + rnorm(n_subjects * n_obs, 0, 1)</p>
-<p>data &lt;- data.frame(subject, time, y)</p>
-<p>model &lt;- lmer(y ~ time + (1 | subject), data = data) summary(model)</p>
-<p>simulate_power &lt;- function(n_subjects, n_sim = 100) { p_vals &lt;- replicate(n_sim, { subject &lt;- factor(rep(1:n_subjects, each = n_obs)) subject_effect &lt;- rnorm(n_subjects, 0, 1) y &lt;- intercept + slope * time + rep(subject_effect, each = n_obs) + rnorm(n_subjects * n_obs, 0, 1) df &lt;- data.frame(subject, time, y) m &lt;- lmer(y ~ time + (1 | subject), data = df) coef &lt;- summary(m)$coefficients coef[“time”, “Pr(&gt;|t|)”] }) mean(p_vals &lt; 0.05) }</p>
-<p>simulate_power(30) # Estimated power at n = 30 subjects</p>
-<!-- rebuild after permissions update -->
+<section id="null-and-alternative-hypotheses" class="level2">
+<h2 class="anchored" data-anchor-id="null-and-alternative-hypotheses">Null and Alternative Hypotheses</h2>
+<p>A <strong>statistical hypothesis</strong> is a testable claim about a population or process. We typically test:</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: The null hypothesis — no effect or no difference<br>
+</li>
+<li><span class="math inline">\(H_1\)</span>: The alternative hypothesis — a meaningful effect or difference</li>
+</ul>
+<p>Example: - <span class="math inline">\(H_0\)</span>: A drug does not affect blood pressure - <span class="math inline">\(H_1\)</span>: The drug does affect blood pressure</p>
+<p>In neuroscience: - <span class="math inline">\(H_0\)</span>: No difference in brain activity between task and rest - <span class="math inline">\(H_1\)</span>: A significant difference exists</p>
+<p>We assume <span class="math inline">\(H_0\)</span> is true and seek evidence to reject it in favor of <span class="math inline">\(H_1\)</span>.</p>
+<hr>
+</section>
+<section id="test-statistics-and-null-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="test-statistics-and-null-distributions">Test Statistics and Null Distributions</h2>
+<p>A <strong>test statistic</strong> is a numeric summary (e.g., a mean difference, <span class="math inline">\(t\)</span>-value, or count) used to compare data against <span class="math inline">\(H_0\)</span>.</p>
+<p>The distribution of the test statistic assuming <span class="math inline">\(H_0\)</span> is true is called the <strong>null distribution</strong>. It provides a reference for assessing how “surprising” the observed statistic is under <span class="math inline">\(H_0\)</span>.</p>
+<hr>
+</section>
+<section id="type-i-error-and-significance-level" class="level2">
+<h2 class="anchored" data-anchor-id="type-i-error-and-significance-level">Type I Error and Significance Level</h2>
+<p>There are two main types of errors:</p>
+<ul>
+<li><strong>Type I error</strong>: Rejecting <span class="math inline">\(H_0\)</span> when it’s true (false positive)<br>
+</li>
+<li><strong>Type II error</strong>: Failing to reject <span class="math inline">\(H_0\)</span> when <span class="math inline">\(H_1\)</span> is true (false negative)</li>
+</ul>
+<p>The <strong>significance level</strong> <span class="math inline">\(lpha\)</span> (often 0.05) is the acceptable probability of a Type I error.</p>
+<hr>
+</section>
+<section id="interpreting-rejection-of-h_0" class="level2">
+<h2 class="anchored" data-anchor-id="interpreting-rejection-of-h_0">Interpreting Rejection of <span class="math inline">\(H_0\)</span></h2>
+<ul>
+<li>Rejecting <span class="math inline">\(H_0\)</span>: Evidence supports <span class="math inline">\(H_1\)</span> (statistically significant)</li>
+<li>Not rejecting <span class="math inline">\(H_0\)</span>: Data are consistent with <span class="math inline">\(H_0\)</span>; not enough evidence for <span class="math inline">\(H_1\)</span></li>
+</ul>
+<hr>
+</section>
+<section id="understanding-p-values" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-p-values">Understanding p-Values</h2>
+<p>The <strong>p-value</strong> measures how surprising the observed data are under <span class="math inline">\(H_0\)</span>.</p>
+<ul>
+<li>Small p-value → evidence <strong>against</strong> <span class="math inline">\(H_0\)</span></li>
+<li>Large p-value → data are typical under <span class="math inline">\(H_0\)</span></li>
+</ul>
+<blockquote class="blockquote">
+<p>A p-value is <strong>not</strong> the probability that <span class="math inline">\(H_0\)</span> is true.</p>
+</blockquote>
+<hr>
+</section>
+<section id="r-example-testing-a-coin-for-fairness" class="level2">
+<h2 class="anchored" data-anchor-id="r-example-testing-a-coin-for-fairness">R Example: Testing a Coin for Fairness</h2>
+<p>We test whether a coin is fair using 20 flips.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>flips <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"H"</span>, <span class="st">"T"</span>), <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>num_heads <span class="ot">&lt;-</span> <span class="fu">sum</span>(flips <span class="sc">==</span> <span class="st">"H"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>num_heads</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>test_result <span class="ot">&lt;-</span> <span class="fu">binom.test</span>(num_heads, n, <span class="at">p =</span> <span class="fl">0.5</span>, <span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>test_result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Exact binomial test
+
+data:  num_heads and n
+number of successes = 13, number of trials = 20, p-value = 0.2632
+alternative hypothesis: true probability of success is not equal to 0.5
+95 percent confidence interval:
+ 0.4078115 0.8460908
+sample estimates:
+probability of success 
+                  0.65 </code></pre>
+</div>
+</div>
+<p>Interpretation: - If p &gt; 0.05 → coin is plausibly fair<br>
+- If p ≤ 0.05 → reject <span class="math inline">\(H_0\)</span>, suspect bias</p>
+<hr>
+</section>
+<section id="simulated-p-value-for-extreme-result" class="level2">
+<h2 class="anchored" data-anchor-id="simulated-p-value-for-extreme-result">Simulated p-Value for Extreme Result</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppose we observed 17 heads out of 20</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p_val <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbinom</span>(<span class="dv">17</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">size =</span> <span class="dv">20</span>, <span class="at">prob =</span> <span class="fl">0.5</span>)) <span class="sc">*</span> <span class="dv">2</span>  <span class="co"># two-tailed</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p_val</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.002576828</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="simulation-of-null-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="simulation-of-null-distribution">Simulation of Null Distribution</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>p_null <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>observed <span class="ot">&lt;-</span> <span class="dv">60</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Analytical p-value</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>p_value_theory <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pbinom</span>(observed <span class="sc">-</span> <span class="dv">1</span>, <span class="at">size =</span> n, <span class="at">prob =</span> p_null)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulated null distribution</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>reps <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>sim_counts <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(reps, <span class="at">size =</span> n, <span class="at">prob =</span> p_null)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>p_value_sim <span class="ot">&lt;-</span> <span class="fu">mean</span>(sim_counts <span class="sc">&gt;=</span> observed)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(sim_counts, <span class="at">breaks =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"skyblue"</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Null Distribution of Heads Count (100 Flips)"</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Number of heads"</span>)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> observed, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Understanding hypothesis testing, null distributions, and p-values lays the foundation for controlling false positives in multiple comparisons. In the next post, we’ll expand to full null distributions, simulation-based inference, and the rationale behind permutation testing.</p>
+<p>Stay tuned for <strong>Part 2</strong>.</p>
 
 
 </section>
