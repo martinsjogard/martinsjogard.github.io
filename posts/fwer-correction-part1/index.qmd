@@ -4,11 +4,13 @@ author: "Martin Sjogard"
 date: 2025-06-20
 format: html
 categories: [statistics, R, hypothesis testing, neuroscience]
+website: true
+
 ---
 
 ## Introduction
 
-In this blog series, we explore permutation-based family-wise error rate (FWER) correction. Before diving into permutation tests and error control, we lay the groundwork by covering core concepts in hypothesis testing: null and alternative hypotheses, test statistics, Type I errors, p-values, and significance testing — all illustrated with hands-on R code.
+In this blog series, I will explore permutation-based family-wise error rate (FWER) correction. Before diving into permutation tests and error control, I will lay some commonly misunderstood groundwork by covering core concepts in hypothesis testing: null and alternative hypotheses, test statistics, Type I errors, p-values, and significance testing — all illustrated with hands-on R code.
 
 ---
 
