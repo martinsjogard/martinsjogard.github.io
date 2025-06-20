@@ -7,21 +7,13 @@ website:
     left:
       - text: "Home"
         href: index.qmd
-      - text: "Posts"
+      - text: "Blog"
         menu:
-          - text: "Power Analysis for LMMs"
-            href: posts/power-analysis-lmm/index.qmd
-          - text: "FWER Correction, Part 1"
-            href: posts/fwer-correction-part1/index.qmd
+          - href: posts/power-analysis-lmm/index.qmd
+          - href: posts/fwer-correction-part1/index.qmd
     right:
       - text: "About"
         href: about.qmd
-
-pages:
-  - index.qmd
-  - about.qmd
-  - posts/power-analysis-lmm/index.qmd
-  - posts/fwer-correction-part1/index.qmd
 
 format:
   html:
