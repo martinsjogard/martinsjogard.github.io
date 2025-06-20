@@ -116,6 +116,6 @@
     "href": "posts/fwer-correction-part1/index.html#conclusion",
     "title": "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals",
     "section": "Conclusion",
-    "text": "Conclusion\nUnderstanding hypothesis testing, null distributions, and p-values lays the foundation for controlling false positives in multiple comparisons. In the next post, we’ll expand to full null distributions, simulation-based inference, and the rationale behind permutation testing.\nStay tuned for Part 2."
+    "text": "Conclusion\n\nUnderstanding hypothesis testing, null distributions, and p-values lays the foundation for controlling false positives in multiple comparisons. In the next post, we’ll expand to full null distributions, simulation-based inference, and the rationale behind permutation testing.\nStay tuned for Part 2."
   }
 ]
