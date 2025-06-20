@@ -1,0 +1,50 @@
+---
+title: "Power Analysis for Linear Mixed Models: What You Need to Know"
+format: html
+author: "Martin Sjogard"
+date: 2025-06-20
+categories: [statistics, R, mixed models, power analysis]
+---
+
+## Introduction
+
+Power analysis for linear mixed models (LMMs) is crucial when designing experiments involving repeated measures or hierarchical data structures. In this post, we demonstrate how to simulate LMM data and explore the impact of sample size on statistical power — without requiring specialized packages like `simr`.
+
+## Simulate Repeated Measures Data
+
+```{r}
+library(lme4)
+set.seed(123)
+
+n_subjects <- 30
+n_obs <- 5
+subject <- factor(rep(1:n_subjects, each = n_obs))
+time <- rep(1:n_obs, n_subjects)
+intercept <- 2
+slope <- 0.5
+subject_effect <- rnorm(n_subjects, 0, 1)
+y <- intercept + slope * time + rep(subject_effect, each = n_obs) + rnorm(n_subjects * n_obs, 0, 1)
+
+data <- data.frame(subject, time, y)
+
+model <- lmer(y ~ time + (1 | subject), data = data)
+summary(model)
+
+simulate_power <- function(n_subjects, n_sim = 100) {
+  p_vals <- replicate(n_sim, {
+    subject <- factor(rep(1:n_subjects, each = n_obs))
+    subject_effect <- rnorm(n_subjects, 0, 1)
+    y <- intercept + slope * time + rep(subject_effect, each = n_obs) + rnorm(n_subjects * n_obs, 0, 1)
+    df <- data.frame(subject, time, y)
+    m <- lmer(y ~ time + (1 | subject), data = df)
+    coef <- summary(m)$coefficients
+    coef["time", "Pr(>|t|)"]
+  })
+  mean(p_vals < 0.05)
+}
+
+simulate_power(30)  # Estimated power at n = 30 subjects
+
+
+<!-- rebuild after permissions update -->
+
