@@ -46,4 +46,5 @@ simulate_power <- function(n_subjects, n_sim = 100) {
 simulate_power(30)  # Estimated power at n = 30 subjects
 
 
+<!-- rebuild after permissions update -->
 
