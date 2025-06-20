@@ -9,7 +9,36 @@ I am a clinical data scientist working as a postdoctoral research fellow in the 
 
 My expertise is in statistical and computational analysis of health-related data, with a focus on neuroimaging and electrophysiological signals in neuropsychiatric disorders. I develop validated, reproducible analysis pipelines and apply advanced methods (e.g., survival analysis, multivariate modeling, signal processing) to support translational research and biomarker discovery.
 
-## Blog Posts
+I received a PhD in Biomedical and Pharmaceutical Sciences at the [Université libre de Bruxelles](https://www.ulb.be/en/ulb-homepage) and hold a master's degree in Neuroscience and a bachelor's degree in Human Movement Science, both from the [Norwegian University of Science and Technology](https://www.ntnu.edu/).
+
+---
+
+## Featured Publications
+
+- **[Brain dysconnectivity relates to disability and cognitive impairment in multiple sclerosis (2021)](https://onlinelibrary.wiley.com/doi/pdf/10.1002/hbm.25247)**  
+  Martin Sjøgård*, Vincent Wens, Jeroen Van Schependom, Lars Costers, Marie D'hooghe, Miguel D'haeseleer, Mark Woolrich, Serge Goldman, Guy Nagels, Xavier De Tiège. *Human Brain Mapping*, 42(3): 626–643.
+
+- **[Do the posterior midline cortices belong to the electrophysiological default-mode network? (2019)](https://www.sciencedirect.com/science/article/abs/pii/S105381191930549X)**  
+  Martin Sjøgård*, Xavier De Tiège, Alison Mary, Philippe Peigneux, Serge Goldman, Guy Nagels, Jeroen Van Schependom, Andrew J Quinn, Mark W Woolrich, Vincent Wens. *NeuroImage*, 200: 221–230.
+
+- **[A novel approach to estimating the cortical sources of sleep spindles using simultaneous EEG/MEG (2022)](https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2022.871166/full)**  
+  Dimitrios Mylonas*, Martin Sjøgård*, Zhaoyue Shi, Bryan Baxter, Matti Hämäläinen, Dara S Manoach, Sheraz Khan. *Frontiers in Neurology*, 13:871166.
+
+---
+
+## Featured Blog Posts
 
 - **[Power Analysis for Linear Mixed Models: What You Need to Know](posts/power-analysis-lmm/index.qmd)**
-- **[Permutation-Based FWER Correction, Part 1](posts/fwer-correction-part1/index.qmd)**
+- **[Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals](posts/fwer-correction-part1/index.qmd)**
+
+---
+
+## Recently
+
+- Pending
+
+---
+
+## Upcoming and Recent Talks
+
+- Pending
