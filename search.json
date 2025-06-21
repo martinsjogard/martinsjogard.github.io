@@ -58,42 +58,42 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Martin Sjogard",
+    "title": "Martin Sjogard (aka: Martin Sjoegaard / Martin Sjøgård)",
     "section": "",
     "text": "I am a clinical data scientist in the Sleep, Cognition and Neuropsychology lab at Massachusetts General Hospital and a postdoctoral research fellow at Harvard Medical School.\nMy expertise is in statistical and computational analysis of health-related data, with a focus on neuroimaging and electrophysiological signals in neuropsychiatric disorders. I create and maintain validated, reproducible analysis pipelines and develop advanced statistical methods to support translational research and biomarker discovery. You can read up on some of my methods development work in anatomically guided MEG/EEG sleep spindle detection and resolving source localization disagreement in resting-state networks, or my work on the relationship between cortical network disruption and cognitive impairment in multiple sclerosis, how sleep spindles topography relates to memory encoding and consolidation, or how hippocampal ripples facilitate wake offline learning.\nI received a PhD in Biomedical and Pharmaceutical Sciences at the Université libre de Bruxelles and hold a master’s degree in Neuroscience and a bachelor’s degree in Human Movement Science, both from the Norwegian University of Science and Technology."
   },
   {
     "objectID": "index.html#about-me",
     "href": "index.html#about-me",
-    "title": "Martin Sjogard",
+    "title": "Martin Sjogard (aka: Martin Sjoegaard / Martin Sjøgård)",
     "section": "",
     "text": "I am a clinical data scientist in the Sleep, Cognition and Neuropsychology lab at Massachusetts General Hospital and a postdoctoral research fellow at Harvard Medical School.\nMy expertise is in statistical and computational analysis of health-related data, with a focus on neuroimaging and electrophysiological signals in neuropsychiatric disorders. I create and maintain validated, reproducible analysis pipelines and develop advanced statistical methods to support translational research and biomarker discovery. You can read up on some of my methods development work in anatomically guided MEG/EEG sleep spindle detection and resolving source localization disagreement in resting-state networks, or my work on the relationship between cortical network disruption and cognitive impairment in multiple sclerosis, how sleep spindles topography relates to memory encoding and consolidation, or how hippocampal ripples facilitate wake offline learning.\nI received a PhD in Biomedical and Pharmaceutical Sciences at the Université libre de Bruxelles and hold a master’s degree in Neuroscience and a bachelor’s degree in Human Movement Science, both from the Norwegian University of Science and Technology."
   },
   {
     "objectID": "index.html#featured-publications",
     "href": "index.html#featured-publications",
-    "title": "Martin Sjogard",
+    "title": "Martin Sjogard (aka: Martin Sjoegaard / Martin Sjøgård)",
     "section": "Featured Publications",
     "text": "Featured Publications\n\nBrain dysconnectivity relates to disability and cognitive impairment in multiple sclerosis (2021)\nMartin Sjøgård*, Vincent Wens, Jeroen Van Schependom, Lars Costers, Marie D’hooghe, Miguel D’haeseleer, Mark Woolrich, Serge Goldman, Guy Nagels, Xavier De Tiège. Human Brain Mapping*, 42(3): 626–643.\nDo the posterior midline cortices belong to the electrophysiological default-mode network? (2019)\nMartin Sjøgård*, Xavier De Tiège, Alison Mary, Philippe Peigneux, Serge Goldman, Guy Nagels, Jeroen Van Schependom, Andrew J Quinn, Mark W Woolrich, Vincent Wens. NeuroImage, 200: 221–230\nA novel approach to estimating the cortical sources of sleep spindles using simultaneous EEG/MEG (2022)\nDimitrios Mylonas*, Martin Sjøgård*, Zhaoyue Shi, Bryan Baxter, Matti Hämäläinen, Dara S Manoach, Sheraz Khan. Frontiers in Neurology, 13:871166."
   },
   {
     "objectID": "index.html#featured-blog-posts",
     "href": "index.html#featured-blog-posts",
-    "title": "Martin Sjogard",
+    "title": "Martin Sjogard (aka: Martin Sjoegaard / Martin Sjøgård)",
     "section": "Featured Blog Posts",
     "text": "Featured Blog Posts\n\nPower Analysis for Linear Mixed Models: What You Need to Know\nPermutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals\nPermutation-Based FWER Correction, Part 7: Adjusted P-Values and Inference with Permutation-Based Correction"
   },
   {
     "objectID": "index.html#recently",
     "href": "index.html#recently",
-    "title": "Martin Sjogard",
+    "title": "Martin Sjogard (aka: Martin Sjoegaard / Martin Sjøgård)",
     "section": "Recently",
     "text": "Recently\n\nTBA"
   },
   {
     "objectID": "index.html#upcoming-and-recent-talks",
     "href": "index.html#upcoming-and-recent-talks",
-    "title": "Martin Sjogard",
+    "title": "Martin Sjogard (aka: Martin Sjoegaard / Martin Sjøgård)",
     "section": "Upcoming and Recent Talks",
     "text": "Upcoming and Recent Talks\n\nDisrupted ipsilateral encoding of motor sequence learning in Schizophrenia: spectral and hemispheric aspects, talk, SCAN group, May 20, 2025, Boston, MA, USA.\nSchizophrenia patients learn normally but do not consolidate: A case for differential sleep spindle topography, talk, MEG methods group, Jan 10, 2025, Boston, MA, USA.\nSleep spindle increases follow cortical patterns of task encoding, talk, MEG methods group, Jan 10, 2024, Boston, MA, USA.\nSleep spindle increases and Task learning vs Sleep-dependent memory consolidation: Two topographically distinct relationships, talk, SCAN group, Aug 15, 2023, Boston, MA, USA.\nHippocampal ripples and memory, talk, Masachusetts General Hospital, Aug 1, 2023, Boston, MA, USA."
   },
