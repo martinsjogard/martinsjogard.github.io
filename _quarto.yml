@@ -13,6 +13,8 @@ website:
             href: posts/power-analysis-lmm/index.qmd
           - text: "FWER Correction, Part 1"
             href: posts/fwer-correction-part1/index.qmd
+          - text: "FWER Correction, Part 7"
+            href: posts/fwer-correction-part7/index.qmd
     right:
       - text: "About"
         href: about.qmd
