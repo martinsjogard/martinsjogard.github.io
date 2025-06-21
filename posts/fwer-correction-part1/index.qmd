@@ -128,9 +128,26 @@ test_result
 
 Explanation: I used sample() to simulate 20 flips of a fair coin. I then count heads. The function binom.test() performs an exact binomial test for the null hypothesis $p=0.5$. The output of binom.test will include a p-value. 
 
-If you run this code, you’ll get a certain number of heads (because of randomness, it could be different each run). For instance, one simulation might yield num_heads = 12 out of 20. In that case, the test result will show a p-value (for 12 heads, p ≈ 0.503). This high p-value indicates 12/20 heads is very consistent with a fair coin (no evidence against $H_0$). We would fail to reject $H_0$ at α = 0.05. 
+If you run this code, you’ll get a certain number of heads (because of randomness, it could be different each run). For instance, one simulation might yield num_heads = 12 out of 20. In that case, the test result will show a p-value (for 12 heads, p ≈ 0.503). This high p-value indicates 12/20 heads is very consistent with a fair coin (no evidence against $H_0$). We would *fail to reject* $H_0$ at α = 0.05. 
 
 Now, to see what a significant result would look like, let’s consider a more extreme outcome. Imagine we had observed num_heads = 17 out of 20. Intuitively, 17 heads in 20 flips is quite unlikely if the coin is fair. We can calculate the p-value for 17 heads:
 
-R code
+```{r}
+# Compute p-value for observing 17 or more heads out of 20 if p=0.5
+p_val <- sum(dbinom(17:20, size = 20, prob = 0.5))
+p_val
+```
 
+This sums the probabilities of getting 17, 18, 19, or 20 heads under a fair coin (two-tailed test would also include the equally unlikely lower tail: 0–3 heads). The resulting one-tail probability for ≥17 heads is very small (around 0.0013), and doubling for two tails gives ~0.0026. Indeed, binom.test(17, 20, 0.5) would return p ≈ 0.0026. This p-value is *far below* 0.05, so such an outcome would be deemed *highly significant*. We would reject $H_0$ and conclude the coin is likely biased.
+
+To summarize the coin test example:
+
+* If we observe a moderate number of heads (say 8, 10, 12, etc.), the p-value is high (well above 0.05).  We do not have evidence to reject $H_0$; the coin could well be fair.
+
+* If we observe an extreme number of heads (like 17 out of 20), the p-value is very low (≪ 0.05). This is significant evidence against $H_0$; we reject fairness and suspect the coin is biased.
+
+* Our test controlled the Type I error at 5%. If the coin were actually fair, there’s only a 5% chance that we’d see a result as extreme as to falsely conclude bias.
+
+
+This simple example highlights how hypothesis testing works in practice: define $H_0$ and $H_1$, choose a test statistic and significance level, collect data, compute a p-value (or compare to a critical value), and decide whether or not to reject $H_0$. We used a **p-value approach** here (directly computing the probability of the observed outcome under $H_0$). Alternatively, one could use a **critical value approach**: for instance, for α = 0.05 in the two-sided coin test, the critical region would be ≤3 heads or ≥17 heads (the most extreme 5% of the null distribution). Indeed, 17 heads was the cutoff — that’s why 17 gave p ~0.0026 (half of the 5% two-tailed region). 
+In the next post, we will delve deeper into the concept of the **null distribution** and formal definitions of the p-value. We’ll see how to obtain null distributions analytically (using probability theory) and by simulation (which sets the stage for permutation tests), discuss the interpretation of p-values in more detail, and illustrate these ideas with further examples. Understanding these fundamentals will prepare us to tackle the multiple-comparison problem and learn how permutation-based methods can control the family-wise error rate in complex scenarios (like analyzing thousands of brain imaging measurements at once).
