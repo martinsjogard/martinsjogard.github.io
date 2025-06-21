@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Martin Sjogard">
-<meta name="dcterms.date" content="2025-06-20">
+<meta name="dcterms.date" content="2025-06-21">
 
-<title>Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals – Martin Sjogard</title>
+<title>Adjusted P-Values and Inference with Permutation-Based Correction – Martin Sjogard</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -126,25 +155,19 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals</h1>
+<h1 class="title">Adjusted P-Values and Inference with Permutation-Based Correction</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">statistics</div>
+    <div class="quarto-category">Statistics</div>
+    <div class="quarto-category">Neuroscience</div>
     <div class="quarto-category">R</div>
-    <div class="quarto-category">multiple comparisons</div>
   </div>
   </div>
 
@@ -162,7 +185,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 20, 2025</p>
+      <p class="date">June 21, 2025</p>
     </div>
   </div>
   
@@ -174,12 +197,15 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="intro" class="level2">
-<h2 class="anchored" data-anchor-id="intro">Intro</h2>
-<p>This is a stub version of the FWER correction blog post. Actual content goes here.</p>
+<p>In this post, we delve into adjusted p-values in the context of permutation-based family-wise error rate (FWER) correction. We will define adjusted p-values formally, derive them from the permutation max-statistic distribution, and explain why using adjusted p-values controls the FWER. We also provide R code to compute adjusted p-values on synthetic data, and we discuss when to use adjusted p-values versus a threshold-based correction approach. Throughout, we maintain a rigorous but accessible tone, with intuitive explanations for readers and examples from neuroscience (e.g.&nbsp;MEG/EEG parcel-level analysis) and other fields.</p>
+<p>Formal Definition of Adjusted P-Values When multiple hypothesis tests are performed together (forming a family of tests), an adjusted p-value for a given hypothesis is the p-value recalibrated to account for the multiple testing. Formally, the adjusted p-value for hypothesis <span class="math inline">\(H_{0,i}\)</span> is defined as the smallest significance level <span class="math inline">\(\alpha\)</span> at which <span class="math inline">\(H_{0,i}\)</span> would be rejected, given that the entire family of tests is considered. In other words, <span class="math inline">\(p_{i,\text{adj}} = \inf{\alpha: H_{0,i} \text{ is rejected by the multiple-testing procedure at level }\alpha}\)</span>. If we reject all hypotheses with <span class="math inline">\(p_{i,\text{adj}} &lt; \alpha\)</span>, then by construction the procedure controls the family-wise error rate at (or below) <span class="math inline">\(\alpha\)</span>.</p>
+<p>Adjusted p-value via max-statistic: For each hypothesis <span class="math inline">\(i\)</span>, the permutation adjusted p-value <span class="math inline">\(p_{i,\text{adj}}\)</span> can be obtained by comparing the observed test statistic <span class="math inline">\(T_i^{obs}\)</span> to the max-statistic null distribution. Specifically, if larger <span class="math inline">\(T\)</span> indicates greater significance (right-tailed test), the adjusted p-value is the probability of seeing a max statistic as extreme as <span class="math inline">\(T_i^{obs}\)</span> under the null. Formally:</p>
+<p>$$</p>
+<p>p_{i,} = (_{1jm} T_j T_i^{})</p>
+<p>$$</p>
+<p>The numerator counts.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
