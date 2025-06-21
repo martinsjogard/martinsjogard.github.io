@@ -363,9 +363,24 @@ probability of success
 </div>
 </div>
 <p>Explanation: I used sample() to simulate 20 flips of a fair coin. I then count heads. The function binom.test() performs an exact binomial test for the null hypothesis <span class="math inline">\(p=0.5\)</span>. The output of binom.test will include a p-value.</p>
-<p>If you run this code, you’ll get a certain number of heads (because of randomness, it could be different each run). For instance, one simulation might yield num_heads = 12 out of 20. In that case, the test result will show a p-value (for 12 heads, p ≈ 0.503). This high p-value indicates 12/20 heads is very consistent with a fair coin (no evidence against <span class="math inline">\(H_0\)</span>). We would fail to reject <span class="math inline">\(H_0\)</span> at α = 0.05.</p>
+<p>If you run this code, you’ll get a certain number of heads (because of randomness, it could be different each run). For instance, one simulation might yield num_heads = 12 out of 20. In that case, the test result will show a p-value (for 12 heads, p ≈ 0.503). This high p-value indicates 12/20 heads is very consistent with a fair coin (no evidence against <span class="math inline">\(H_0\)</span>). We would <em>fail to reject</em> <span class="math inline">\(H_0\)</span> at α = 0.05.</p>
 <p>Now, to see what a significant result would look like, let’s consider a more extreme outcome. Imagine we had observed num_heads = 17 out of 20. Intuitively, 17 heads in 20 flips is quite unlikely if the coin is fair. We can calculate the p-value for 17 heads:</p>
-<p>R code</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute p-value for observing 17 or more heads out of 20 if p=0.5</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p_val <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbinom</span>(<span class="dv">17</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">size =</span> <span class="dv">20</span>, <span class="at">prob =</span> <span class="fl">0.5</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>p_val</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.001288414</code></pre>
+</div>
+</div>
+<p>This sums the probabilities of getting 17, 18, 19, or 20 heads under a fair coin (two-tailed test would also include the equally unlikely lower tail: 0–3 heads). The resulting one-tail probability for ≥17 heads is very small (around 0.0013), and doubling for two tails gives ~0.0026. Indeed, binom.test(17, 20, 0.5) would return p ≈ 0.0026. This p-value is <em>far below</em> 0.05, so such an outcome would be deemed <em>highly significant</em>. We would reject <span class="math inline">\(H_0\)</span> and conclude the coin is likely biased.</p>
+<p>To summarize the coin test example:</p>
+<ul>
+<li><p>If we observe a moderate number of heads (say 8, 10, 12, etc.), the p-value is high (well above 0.05). We do not have evidence to reject <span class="math inline">\(H_0\)</span>; the coin could well be fair.</p></li>
+<li><p>If we observe an extreme number of heads (like 17 out of 20), the p-value is very low (≪ 0.05). This is significant evidence against <span class="math inline">\(H_0\)</span>; we reject fairness and suspect the coin is biased.</p></li>
+<li><p>Our test controlled the Type&nbsp;I error at 5%. If the coin were actually fair, there’s only a 5% chance that we’d see a result as extreme as to falsely conclude bias.</p></li>
+</ul>
+<p>This simple example highlights how hypothesis testing works in practice: define <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_1\)</span>, choose a test statistic and significance level, collect data, compute a p-value (or compare to a critical value), and decide whether or not to reject <span class="math inline">\(H_0\)</span>. We used a <strong>p-value approach</strong> here (directly computing the probability of the observed outcome under <span class="math inline">\(H_0\)</span>). Alternatively, one could use a <strong>critical value approach</strong>: for instance, for α = 0.05 in the two-sided coin test, the critical region would be ≤3 heads or ≥17 heads (the most extreme 5% of the null distribution). Indeed, 17 heads was the cutoff — that’s why 17 gave p ~0.0026 (half of the 5% two-tailed region). In the next post, we will delve deeper into the concept of the <strong>null distribution</strong> and formal definitions of the p-value. We’ll see how to obtain null distributions analytically (using probability theory) and by simulation (which sets the stage for permutation tests), discuss the interpretation of p-values in more detail, and illustrate these ideas with further examples. Understanding these fundamentals will prepare us to tackle the multiple-comparison problem and learn how permutation-based methods can control the family-wise error rate in complex scenarios (like analyzing thousands of brain imaging measurements at once).</p>
 
 
 </section>
