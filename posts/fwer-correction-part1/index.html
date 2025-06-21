@@ -200,9 +200,9 @@ window.Quarto = {
 <p>In this post, we delve into adjusted p-values in the context of permutation-based family-wise error rate (FWER) correction. We will define adjusted p-values formally, derive them from the permutation max-statistic distribution, and explain why using adjusted p-values controls the FWER. We also provide R code to compute adjusted p-values on synthetic data, and we discuss when to use adjusted p-values versus a threshold-based correction approach. Throughout, we maintain a rigorous but accessible tone, with intuitive explanations for readers and examples from neuroscience (e.g.&nbsp;MEG/EEG parcel-level analysis) and other fields.</p>
 <p>Formal Definition of Adjusted P-Values When multiple hypothesis tests are performed together (forming a family of tests), an adjusted p-value for a given hypothesis is the p-value recalibrated to account for the multiple testing. Formally, the adjusted p-value for hypothesis <span class="math inline">\(H_{0,i}\)</span> is defined as the smallest significance level <span class="math inline">\(\alpha\)</span> at which <span class="math inline">\(H_{0,i}\)</span> would be rejected, given that the entire family of tests is considered. In other words, <span class="math inline">\(p_{i,\text{adj}} = \inf{\alpha: H_{0,i} \text{ is rejected by the multiple-testing procedure at level }\alpha}\)</span>. If we reject all hypotheses with <span class="math inline">\(p_{i,\text{adj}} &lt; \alpha\)</span>, then by construction the procedure controls the family-wise error rate at (or below) <span class="math inline">\(\alpha\)</span>.</p>
 <p>Adjusted p-value via max-statistic: For each hypothesis <span class="math inline">\(i\)</span>, the permutation adjusted p-value <span class="math inline">\(p_{i,\text{adj}}\)</span> can be obtained by comparing the observed test statistic <span class="math inline">\(T_i^{obs}\)</span> to the max-statistic null distribution. Specifically, if larger <span class="math inline">\(T\)</span> indicates greater significance (right-tailed test), the adjusted p-value is the probability of seeing a max statistic as extreme as <span class="math inline">\(T_i^{obs}\)</span> under the null. Formally:</p>
-<p>$$</p>
-<p>p_{i,} = (_{1jm} T_j T_i^{})</p>
-<p>$$</p>
+<p><span class="math display">\[
+p_{i,\text{adj}} = \Pr\left(\max_{1\leq j\leq m} T_j \geq T_i^{\text{obs}}\right)
+\]</span></p>
 <p>The numerator counts.</p>
 
 
