@@ -15,9 +15,7 @@ When multiple hypothesis tests are performed together (forming a family of tests
 Adjusted p-value via max-statistic: For each hypothesis $i$, the permutation adjusted p-value $p_{i,\text{adj}}$ can be obtained by comparing the observed test statistic $T_i^{obs}$ to the max-statistic null distribution. Specifically, if larger $T$ indicates greater significance (right-tailed test), the adjusted p-value is the probability of seeing a max statistic as extreme as $T_i^{obs}$ under the null. Formally: 
 
 $$
-
 p_{i,\text{adj}} = \Pr\left(\max_{1\leq j\leq m} T_j \geq T_i^{\text{obs}}\right)
-
 $$
 
 The numerator counts.
