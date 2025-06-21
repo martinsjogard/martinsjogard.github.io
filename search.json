@@ -1,24 +1,10 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "posts/fwer-correction-part7/index.html",
+    "href": "posts/fwer-correction-part7/index.html",
+    "title": "Adjusted P-Values and Inference with Permutation-Based Correction",
     "section": "",
-    "text": "This page will eventually describe my research interests, collaborations, and contact details."
-  },
-  {
-    "objectID": "posts/power-analysis-lmm/index.html",
-    "href": "posts/power-analysis-lmm/index.html",
-    "title": "Power Analysis for Linear Mixed Models: What You Need to Know",
-    "section": "",
-    "text": "This is a stub version of the LMM power analysis blog post. Actual content goes here."
-  },
-  {
-    "objectID": "posts/power-analysis-lmm/index.html#intro",
-    "href": "posts/power-analysis-lmm/index.html#intro",
-    "title": "Power Analysis for Linear Mixed Models: What You Need to Know",
-    "section": "",
-    "text": "This is a stub version of the LMM power analysis blog post. Actual content goes here."
+    "text": "In this post, I delve into adjusted p-values in the context of permutation-based family-wise error rate (FWER) correction. I will define adjusted p-values formally, derive them from the permutation max-statistic distribution, and explain why using adjusted p-values controls the FWER. I also provide R code to compute adjusted p-values on synthetic data, and discuss when to use adjusted p-values versus a threshold-based correction approach. Throughout, I try to maintain a rigorous but accessible tone, with intuitive explanations for my specific collaborators/trainees and examples from neuroscience (e.g. MEG/EEG parcel-level analysis) and other fields.\nFormal Definition of Adjusted P-Values When multiple hypothesis tests are performed together (forming a family of tests), an adjusted p-value for a given hypothesis is the p-value recalibrated to account for the multiple testing. Formally, the adjusted p-value for hypothesis \\(H_{0,i}\\) is defined as the smallest significance level \\(\\alpha\\) at which \\(H_{0,i}\\) would be rejected, given that the entire family of tests is considered. In other words, \\(p_{i,\\text{adj}} = \\inf{\\alpha: H_{0,i}\\) is rejected by the multiple-testing procedure at level \\(\\alpha\\). If we reject all hypotheses with \\(p_{i,\\text{adj}} &lt; \\alpha\\), then by construction the procedure controls the family-wise error rate at (or below) \\(\\alpha\\).\nAdjusted p-value via max-statistic: For each hypothesis \\(i\\), the permutation adjusted p-value \\(p_{i,\\text{adj}}\\) can be obtained by comparing the observed test statistic \\(T_i^{obs}\\) to the max-statistic null distribution. Specifically, if larger \\(T\\) indicates greater significance (right-tailed test), the adjusted p-value is the probability of seeing a max statistic as extreme as \\(T_i^{obs}\\) under the null. Formally:\n\\[\np_{i,\\text{adj}} = \\Pr\\left(\\max_{1\\leq j\\leq m} T_j \\geq T_i^{\\text{obs}}\\right)\n\\]\nThe numerator counts."
   },
   {
     "objectID": "posts/fwer-correction-part1/index.html",
@@ -70,11 +56,11 @@
     "text": "Example: Testing a Coin for Fairness (with R code)\nImagine you have a coin and you suspect it might be biased (not fair). We can frame this as a hypothesis test:\n\n\\(H_0\\): The coin is fair (probability of heads \\(p = 0.5\\)).\n\\(H_1\\): The coin is not fair (\\(p \\neq 0.5\\), two-sided alternative).\n\nWe decide to flip the coin \\(n=20\\) times and count the number of heads. Our test statistic will be the number of heads in 20 flips. Under \\(H_0\\) (fair coin), the null distribution of this statistic is \\(\\text{Binomial}(n=20, p=0.5)\\). Let’s say we perform the experiment. Below is some R code to simulate the coin flips and conduct the test:\n\n# Set seed for reproducibility\nset.seed(42)\n\n# Define number of flips\nn &lt;- 20\n\n# Simulate 20 coin flips (H = \"heads\", T = \"tails\")\nflips &lt;- sample(c(\"H\", \"T\"), size = n, replace = TRUE, prob = c(0.5, 0.5))\nflips  # show the sequence of flips\n\n [1] \"H\" \"H\" \"T\" \"H\" \"H\" \"H\" \"H\" \"T\" \"H\" \"H\" \"T\" \"H\" \"H\" \"T\" \"T\" \"H\" \"H\" \"T\" \"T\"\n[20] \"H\"\n\n# Count the number of heads\nnum_heads &lt;- sum(flips == \"H\")\nnum_heads  # print the number of heads observed\n\n[1] 13\n\n# Perform a two-sided test for fairness:\n# H0: p = 0.5, H1: p != 0.5\ntest_result &lt;- binom.test(num_heads, n, p = 0.5, alternative = \"two.sided\")\ntest_result\n\n\n    Exact binomial test\n\ndata:  num_heads and n\nnumber of successes = 13, number of trials = 20, p-value = 0.2632\nalternative hypothesis: true probability of success is not equal to 0.5\n95 percent confidence interval:\n 0.4078115 0.8460908\nsample estimates:\nprobability of success \n                  0.65 \n\n\nExplanation: I used sample() to simulate 20 flips of a fair coin. I then count heads. The function binom.test() performs an exact binomial test for the null hypothesis \\(p=0.5\\). The output of binom.test will include a p-value.\nIf you run this code, you’ll get a certain number of heads (because of randomness, it could be different each run). For instance, one simulation might yield num_heads = 12 out of 20. In that case, the test result will show a p-value (for 12 heads, p ≈ 0.503). This high p-value indicates 12/20 heads is very consistent with a fair coin (no evidence against \\(H_0\\)). We would fail to reject \\(H_0\\) at α = 0.05.\nNow, to see what a significant result would look like, let’s consider a more extreme outcome. Imagine we had observed num_heads = 17 out of 20. Intuitively, 17 heads in 20 flips is quite unlikely if the coin is fair. We can calculate the p-value for 17 heads:\nR code"
   },
   {
-    "objectID": "posts/fwer-correction-part7/index.html",
-    "href": "posts/fwer-correction-part7/index.html",
-    "title": "Adjusted P-Values and Inference with Permutation-Based Correction",
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
     "section": "",
-    "text": "I very commonly get questions about nonparametric statistical control from collaborators, and I have been maintaining some personal notes that I tend to distribute to them on request. Here, I have modified them significantly with the intention of making them readable for the younger trainees who also ask me about these things. It should (hopefully) be readable for my collaborators of any background (psychology undergrads, physicians, engineers, neuroscienctists).\nI will periodically update it with more of my notes. The notes start with establishing some common understanding of hypothesis testing, the concept of a test statistic, distributions of a repeated statistic under the null, and the need for thresholding, then walks (or rambles) through multiple comparisons as a concept, various resampling approaches, some permutation intuition, and finally to the permutation-based family-wise error rate correction and the maximum statistic. The goal is to have the reader think about how distributions are generated under specific constraints and assumptions, and how thresholding these distributions directly relate to the questions we’re asking of the data. I find that these permutation-based/non-parametric concepts manage what standard courses on parametric statistics taught in every psychology stats class never does: to instill statistical intuition in people.\nIn this post, we delve into adjusted p-values in the context of permutation-based family-wise error rate (FWER) correction. We will define adjusted p-values formally, derive them from the permutation max-statistic distribution, and explain why using adjusted p-values controls the FWER. We also provide R code to compute adjusted p-values on synthetic data, and we discuss when to use adjusted p-values versus a threshold-based correction approach. Throughout, we maintain a rigorous but accessible tone, with intuitive explanations for readers and examples from neuroscience (e.g. MEG/EEG parcel-level analysis) and other fields.\nFormal Definition of Adjusted P-Values When multiple hypothesis tests are performed together (forming a family of tests), an adjusted p-value for a given hypothesis is the p-value recalibrated to account for the multiple testing. Formally, the adjusted p-value for hypothesis \\(H_{0,i}\\) is defined as the smallest significance level \\(\\alpha\\) at which \\(H_{0,i}\\) would be rejected, given that the entire family of tests is considered. In other words, \\(p_{i,\\text{adj}} = \\inf{\\alpha: H_{0,i}\\) is rejected by the multiple-testing procedure at level \\(\\alpha\\). If we reject all hypotheses with \\(p_{i,\\text{adj}} &lt; \\alpha\\), then by construction the procedure controls the family-wise error rate at (or below) \\(\\alpha\\).\nAdjusted p-value via max-statistic: For each hypothesis \\(i\\), the permutation adjusted p-value \\(p_{i,\\text{adj}}\\) can be obtained by comparing the observed test statistic \\(T_i^{obs}\\) to the max-statistic null distribution. Specifically, if larger \\(T\\) indicates greater significance (right-tailed test), the adjusted p-value is the probability of seeing a max statistic as extreme as \\(T_i^{obs}\\) under the null. Formally:\n\\[\np_{i,\\text{adj}} = \\Pr\\left(\\max_{1\\leq j\\leq m} T_j \\geq T_i^{\\text{obs}}\\right)\n\\]\nThe numerator counts."
+    "text": "This page will eventually describe my research interests, collaborations, and contact details."
   },
   {
     "objectID": "index.html",
@@ -117,5 +103,19 @@
     "title": "Martin Sjogard",
     "section": "Upcoming and Recent Talks",
     "text": "Upcoming and Recent Talks\n\nDisrupted ipsilateral encoding of motor sequence learning in Schizophrenia: spectral and hemispheric aspects, talk, SCAN group, May 20, 2025, Boston, MA, USA.\nSchizophrenia patients learn normally but do not consolidate: A case for differential sleep spindle topography, talk, MEG methods group, Jan 10, 2025, Boston, MA, USA.\nSleep spindle increases follow cortical patterns of task encoding, talk, MEG methods group, Jan 10, 2024, Boston, MA, USA.\nSleep spindle increases and Task learning vs Sleep-dependent memory consolidation: Two topographically distinct relationships, talk, SCAN group, Aug 15, 2023, Boston, MA, USA.\nHippocampal ripples and memory, talk, Masachusetts General Hospital, Aug 1, 2023, Boston, MA, USA."
+  },
+  {
+    "objectID": "posts/power-analysis-lmm/index.html",
+    "href": "posts/power-analysis-lmm/index.html",
+    "title": "Power Analysis for Linear Mixed Models: What You Need to Know",
+    "section": "",
+    "text": "This is a stub version of the LMM power analysis blog post. Actual content goes here."
+  },
+  {
+    "objectID": "posts/power-analysis-lmm/index.html#intro",
+    "href": "posts/power-analysis-lmm/index.html#intro",
+    "title": "Power Analysis for Linear Mixed Models: What You Need to Know",
+    "section": "",
+    "text": "This is a stub version of the LMM power analysis blog post. Actual content goes here."
   }
 ]
