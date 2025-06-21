@@ -30,15 +30,19 @@ I received a PhD in Biomedical and Pharmaceutical Sciences at the [Université l
 
 - **[Power Analysis for Linear Mixed Models: What You Need to Know](posts/power-analysis-lmm/index.qmd)**
 - **[Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals](posts/fwer-correction-part1/index.qmd)**
+- **[Permutation-Based FWER Correction, Part 7: Adjusted P-Values and Inference with Permutation-Based Correction](posts/fwer-correction-part7/index.qmd)**
 
 ---
 
 ## Recently
 
-- Pending
+- TBA
 
 ---
 
 ## Upcoming and Recent Talks
 
-- Pending
+- Sleep spindle increases follow cortical patterns of task encoding, talk, MEG methods group, Jan 10, 2024, Boston, MA, USA.
+- Sleep spindle increases and Task learning vs Sleep-dependent memory consolidation: Two topographically distinct relationships, talk, SCAN group, Aug 15, 2024, Boston, MA, USA.
+- Hippocampal ripples and memory, talk, Masachusetts General Hospital, Aug 30, 2023, Boston, MA, USA.
+
