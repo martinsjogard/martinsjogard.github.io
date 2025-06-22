@@ -16,7 +16,7 @@ website:
           - text: "FWER Correction, background pt. 2"
             href: posts/fwer-correction-part2/index.qmd
           - text: "Developing a novel cluster number determination for K-means clustering"
-            href: posts/kmeans-clusterdetermination-1/index.qmd
+            href: posts/kmeans-permutation/index.qmd
     right:
       - text: "About"
         href: about.qmd
