@@ -76,7 +76,7 @@ Below is an R implementation outline for this permutation test approach. I will 
 
 ```{r}
 
-permute_k_test <- function(data, K.max = 10, B = 1000, alpha = 0.05) {
+permute_k_test <- function(data, K.max = 10, B = 10000, alpha = 0.05) {
   optK <- 1
   km1 <- kmeans(data, centers = 1, nstart = 10)
   prevW <- km1$tot.withinss
@@ -112,6 +112,8 @@ permute_k_test <- function(data, K.max = 10, B = 1000, alpha = 0.05) {
       optK <- K
       prevW <- W_K
     } else {
+      cat(sprintf("Optimal K from permutations = %d ",
+                  K-1))
       break
     }
   }
