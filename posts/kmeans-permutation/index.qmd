@@ -75,54 +75,48 @@ I could alternatively compute $p_K$ for $W(K)$ being significantly lower than pe
 Below is an R implementation outline for this permutation test approach. I will implement a function `permute_k_test()` that returns the recommended K.
 
 ```{r}
-permute_k_test <- function(data, K.max = 10, B = 200, alpha = 0.05, verbose = TRUE) {
-  n <- nrow(data)
-  p <- ncol(data)
-  
-  W_real <- numeric(K.max)       # WCSS for each K
-  delta_real <- numeric(K.max)   # Δ WCSS = W(K-1) - W(K)
-  delta_perm_all <- list()       # store each set of permuted Δs
-  
-  W_real[1] <- sum(scale(data, center = TRUE, scale = FALSE)^2)  # total SS for K=1
+
+permute_k_test <- function(data, K.max = 10, B = 1000, alpha = 0.05) {
   optK <- 1
+  km1 <- kmeans(data, centers = 1, nstart = 10)
+  prevW <- km1$tot.withinss
   
   for (K in 2:K.max) {
     kmK <- kmeans(data, centers = K, nstart = 10)
-    W_real[K] <- kmK$tot.withinss
-    delta_real[K] <- W_real[K - 1] - W_real[K]
+    W_K <- kmK$tot.withinss
+    delta_real <- prevW - W_K
     
-    # Null distribution
     delta_perm <- numeric(B)
     for (b in 1:B) {
-      data_perm <- data
-      for (j in 1:p) {
-        data_perm[, j] <- sample(data_perm[, j])
-      }
+      # Generate truly structureless null data
+      null_data <- matrix(rnorm(n = nrow(data) * ncol(data),
+                                mean = mean(unlist(data)),
+                                sd = sd(unlist(data))),
+                          ncol = ncol(data))
+      data_perm <- as.data.frame(null_data)
       
-      kmK_perm   <- kmeans(data_perm, centers = K, nstart = 10, iter.max = 50)
-      kmKm1_perm <- kmeans(data_perm, centers = K - 1, nstart = 10, iter.max = 50)
+      kmK1_perm <- kmeans(data_perm, centers = K - 1, nstart = 10)
+      kmK_perm <- kmeans(data_perm, centers = K, nstart = 10)
       
-      delta_perm[b] <- kmKm1_perm$tot.withinss - kmK_perm$tot.withinss
+      delta_perm[b] <- kmK1_perm$tot.withinss - kmK_perm$tot.withinss
     }
-    delta_perm_all[[K]] <- delta_perm
-    p_val <- mean(delta_perm >= delta_real[K])
     
-    if (verbose) {
-      cat(sprintf("K = %d | Δ_real = %.2f | p = %.4f\n", K, delta_real[K], p_val))
-    }
+    hist(delta_perm, breaks = 40, main = paste("Δs (Null) for K =", K), xlab = "Δ")
+    abline(v = delta_real, col = "red", lwd = 2)
+    
+    p_val <- mean(delta_perm >= delta_real)
+    cat(sprintf("K = %d : WCSS = %.3f, prev WCSS = %.3f, Δ = %.3f, p = %.3f\n",
+                K, W_K, prevW, delta_real, p_val))
     
     if (p_val < alpha) {
       optK <- K
+      prevW <- W_K
     } else {
-      if (verbose) cat("Stopping at K =", optK, "\n")
       break
     }
   }
   
-  return(list(optK = optK,
-              W_real = W_real[1:K.max],
-              delta_real = delta_real[1:K.max],
-              delta_perm_all = delta_perm_all))
+  return(optK)
 }
 ```
 
@@ -132,47 +126,23 @@ A few implementation notes: I carry `prevW` to avoid recomputing for K-1 every t
 
 ```{r}
 set.seed(123)
-n <- 200  # number of points per cluster
+n <- 200
 sd <- 0.3
 
-# Create each cluster with explicit X and Y components
-cluster1 <- data.frame(
-  X1 = rnorm(n, mean = 0, sd = sd),
-  X2 = rnorm(n, mean = 0, sd = sd),
-  label = 1
-)
-cluster2 <- data.frame(
-  X1 = rnorm(n, mean = 5, sd = sd),
-  X2 = rnorm(n, mean = 0, sd = sd),
-  label = 2
-)
-cluster3 <- data.frame(
-  X1 = rnorm(n, mean = 0, sd = sd),
-  X2 = rnorm(n, mean = 5, sd = sd),
-  label = 3
-)
-cluster4 <- data.frame(
-  X1 = rnorm(n, mean = 5, sd = sd),
-  X2 = rnorm(n, mean = 5, sd = sd),
-  label = 4
-)
+cluster1 <- data.frame(X1 = rnorm(n, 0, sd), X2 = rnorm(n, 0, sd))
+cluster2 <- data.frame(X1 = rnorm(n, 5, sd), X2 = rnorm(n, 0, sd))
+cluster3 <- data.frame(X1 = rnorm(n, 0, sd), X2 = rnorm(n, 5, sd))
+cluster4 <- data.frame(X1 = rnorm(n, 5, sd), X2 = rnorm(n, 5, sd))
 
 # Combine all clusters
 data.sim <- rbind(cluster1, cluster2, cluster3, cluster4)
 
-# Plot with cluster labels
-plot(
-  data.sim$X1, data.sim$X2, col = data.sim$label,
-  pch = 16, cex = 0.6,
-  main = "Simulated Data: 4 Clusters at Corners",
-  xlab = "X1", ylab = "X2"
-)
 ```
 
 I know there are 4 clusters centered at (0,0), (5,0), (0,5), (5,5). Now apply the test:
 
 ```{r}
-result <- permute_k_test(data.sim, K.max=8, B=1000, alpha=0.05)
+result <- permute_k_test(data.sim, K.max = 6, B = 100, alpha = 0.01)
 ```
 
 (Using a stricter alpha=0.01 since B=50 is small in this quick demo.)
