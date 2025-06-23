@@ -75,7 +75,6 @@ I could alternatively compute $p_K$ for $W(K)$ being significantly lower than pe
 Below is an R implementation outline for this permutation test approach. I will implement a function `permute_k_test()` that returns the recommended K.
 
 ```{r}
-library(ggpl)
 permute_k_test <- function(data, K.max = 10, B = 200, alpha = 0.05, verbose = TRUE) {
   n <- nrow(data)
   p <- ncol(data)
