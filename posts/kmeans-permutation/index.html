@@ -310,7 +310,7 @@ p_K = \Pr\left( \Delta W_K^{\text{perm}} \geq \Delta W_K^{\text{real}} \right)
 <h2 class="anchored" data-anchor-id="r-implementation">R implementation</h2>
 <p>Below is an R implementation outline for this permutation test approach. I will implement a function <code>permute_k_test()</code> that returns the recommended K.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>permute_k_test <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">K.max =</span> <span class="dv">10</span>, <span class="at">B =</span> <span class="dv">1000</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>) {</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>permute_k_test <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">K.max =</span> <span class="dv">10</span>, <span class="at">B =</span> <span class="dv">10000</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>) {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  optK <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  km1 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(data, <span class="at">centers =</span> <span class="dv">1</span>, <span class="at">nstart =</span> <span class="dv">10</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  prevW <span class="ot">&lt;-</span> km1<span class="sc">$</span>tot.withinss</span>
@@ -346,12 +346,14 @@ p_K = \Pr\left( \Delta W_K^{\text{perm}} \geq \Delta W_K^{\text{real}} \right)
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>      optK <span class="ot">&lt;-</span> K</span>
 <span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>      prevW <span class="ot">&lt;-</span> W_K</span>
 <span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(optK)</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Optimal K from permutations = %d "</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>                  K<span class="dv">-1</span>))</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(optK)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>A few implementation notes: I carry <code>prevW</code> to avoid recomputing for K-1 every time (since in iteration K, <code>prevW</code> is actually <span class="math inline">\(W(K-1)\)</span> from previous iteration’s real data clustering). For permutation, I do cluster both K and K-1 to get the drop. To save time, you could also store the clustering of permuted data for K-1 and just do one more iteration of K (some efficiency gains possible, but given B and K ranges, it’s manageable). I used fewer <code>nstart</code> and iterations for permuted clustering for speed – since permuted data is random, a quick clustering is fine (we’re not so concerned about small differences; I could also use a single random start because I just need distribution, not exact optimum for each permuted sample). Now, to test this function on a simple example. I’ll simulate a dataset with known clusters.</p>
 <p><strong>Simulation Example</strong>: Suppose I have 4 clusters in 2D, well separated.</p>
@@ -409,7 +411,8 @@ p_K = \Pr\left( \Delta W_K^{\text{perm}} \geq \Delta W_K^{\text{real}} \right)
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>K = 5 : WCSS = 127.177, prev WCSS = 139.582, Δ = 12.405, p = 1.000</code></pre>
+<pre><code>K = 5 : WCSS = 127.177, prev WCSS = 139.582, Δ = 12.405, p = 1.000
+Optimal K from permutations = 4 </code></pre>
 </div>
 </div>
 <p>(Using a stricter alpha=0.01 since B=50 is small in this quick demo.)</p>
@@ -440,7 +443,8 @@ p_K = \Pr\left( \Delta W_K^{\text{perm}} \geq \Delta W_K^{\text{real}} \right)
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>K = 2 : WCSS = 19.998, prev WCSS = 34.072, Δ = 14.074, p = 0.054</code></pre>
+<pre><code>K = 2 : WCSS = 19.998, prev WCSS = 34.072, Δ = 14.074, p = 0.054
+Optimal K from permutations = 1 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># likely res = 1 (no evidence for &gt;1 clusters)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -456,7 +460,8 @@ p_K = \Pr\left( \Delta W_K^{\text{perm}} \geq \Delta W_K^{\text{real}} \right)
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>K = 2 : WCSS = 152.348, prev WCSS = 681.371, Δ = 529.023, p = 0.096</code></pre>
+<pre><code>K = 2 : WCSS = 152.348, prev WCSS = 681.371, Δ = 529.023, p = 0.096
+Optimal K from permutations = 1 </code></pre>
 </div>
 </div>
 <p>This might return 2 for iris (since setosa vs others is significant, but a 3rd cluster might not pass p&lt;0.05 because versicolor vs virginica separation is weak). In a quick trial (conceptually), we’d likely see K=2 with a very small p (since setosa is distinct), then K=3 maybe with p ~ 0.1 (not below 0.05, meaning cannot confirm the need for 3 clusters at 95% confidence). Thus the method might choose K=2. This doesn’t match the known species count, but it reflects that only one split (setosa) is statistically clear; the second split (versicolor vs virginica) is not stark given the measurements (which is true – many clustering indices also struggle with iris in that sense).</p>
