@@ -215,6 +215,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#example-results-on-real-data" id="toc-example-results-on-real-data" class="nav-link" data-scroll-target="#example-results-on-real-data">Example results on real data</a></li>
   <li><a href="#when-to-consider-this-method" id="toc-when-to-consider-this-method" class="nav-link" data-scroll-target="#when-to-consider-this-method">When to consider this method</a></li>
+  <li><a href="#future" id="toc-future" class="nav-link" data-scroll-target="#future">Future</a></li>
   </ul>
 </nav>
     </div>
@@ -487,7 +488,7 @@ Optimal K from permutations = 1 </code></pre>
 <li><p>Local minima and algorithm stability: Each K-means run (especially on permuted data) could end in different local minima – however, since I do many and essentially take a distribution, that variability is part of the null distribution. I must ensure K-means runs sufficiently to approximate typical WCSS. I used multiple starts on real data for robustness. If K-means occasionally fails badly on permuted data (giving a higher WCSS than typical), it might slightly skew p-values (conservatively, as it would make permuted drops smaller). Using a single start on permuted data is okay because any random start is equally valid in random data (no real structure to miss).</p></li>
 </ul>
 <p><strong>Relation to other methods</strong>: This permutation test can be seen as complementing the gap statistic. Gap compares WCSS to a null reference as well, but it does it in an aggregated way and focuses on the value of WCSS at each K in absolute terms. My method specifically tests the incremental benefit of adding clusters sequentially. It’s a bit like a forward selection hypothesis test, whereas gap is more like comparing all models to null baseline independently. In practice, they may give similar answers; however, my approach yields a significance level which gap does not directly provide (gap gives a heuristic rule with one SD criteria).</p>
-<p>Interestingly, you could also incorporate other metrics into a permutation test – for example, test if the silhouette score at a given K is significantly higher than under random assignments. The multi-aspect permutation test by Ceccato et al.&nbsp;(2025) combines multiple such metrics in a nonparametric combination. My focus on WCSS is narrower but straightforward.</p>
+<p>Interestingly, you could also incorporate other metrics into a permutation test – for example, test if the silhouette score at a given K is significantly higher than under random assignments. My initial focus on WCSS for now is narrow but straightforward.</p>
 <p><strong>Philosophical note</strong>: This method attempts to put cluster counting on firmer statistical footing. It assumes there is a null scenario (no clusters) that I can simulate. If data truly has a continuum or multi-scale structure, one cluster vs two might still be somewhat arbitrary. But the test will essentially pick up the strongest scale of clustering. So it might identify a hierarchy: e.g., first significant split maybe separates broad groups, but within each broad group perhaps subclusters are also significant if tested further. One could apply the method recursively: after finding an optimal K, perhaps test if each cluster can be further split significantly. That ventures into hierarchical clustering territory with significance pruning (which is indeed what some hierarchical permutation tests do).</p>
 </section>
 </section>
@@ -503,6 +504,10 @@ Optimal K from permutations = 1 </code></pre>
 <section id="when-to-consider-this-method" class="level2">
 <h2 class="anchored" data-anchor-id="when-to-consider-this-method">When to consider this method</h2>
 <p>This permutation approach is useful when you want a principled, hypothesis-testing flavor solution to cluster number selection. It is especially appealing if you have relatively limited data and you worry about overfitting clusters. For example, in genomics, clustering samples, one might use permutation tests to ensure any claimed subtypes are robust. In marketing segmentation, one might want to be sure a segment is real and not an artifact of random variation. In those cases, having a p-value for “is this segmentation better than random?” is valuable. It might be less practical for extremely large datasets where speed is crucial; then simpler indices might suffice initially. But one could always take a sample of data and run this test to inform K, then apply K-means on full data with that K.</p>
+</section>
+<section id="future" class="level2">
+<h2 class="anchored" data-anchor-id="future">Future</h2>
+<p>I may want to extend this to a multi-metric approach. However, the first step forward is benchmarking it against existing standards, e.g.&nbsp;silhouetting, the (similar) gap statistic approach, etc.</p>
 
 
 </section>
