@@ -358,16 +358,41 @@ p_K = \Pr\left( \Delta W_K^{\text{perm}} \geq \Delta W_K^{\text{real}} \right)
 <p><strong>Simulation Example</strong>: Suppose I have 4 clusters in 2D, well separated.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>data.sim <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n<span class="sc">*</span><span class="dv">2</span>, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.3</span>), <span class="at">ncol=</span><span class="dv">2</span>),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n<span class="sc">*</span><span class="dv">2</span>, <span class="at">mean=</span><span class="dv">5</span>, <span class="at">sd=</span><span class="fl">0.3</span>), <span class="at">ncol=</span><span class="dv">2</span>),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n<span class="sc">*</span><span class="dv">2</span>, <span class="at">mean=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">5</span>), <span class="at">sd=</span><span class="fl">0.3</span>), <span class="at">ncol=</span><span class="dv">2</span>),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n<span class="sc">*</span><span class="dv">2</span>, <span class="at">mean=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="at">sd=</span><span class="fl">0.3</span>), <span class="at">ncol=</span><span class="dv">2</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>data.sim <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(data.sim)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data.sim) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X1"</span>,<span class="st">"X2"</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data.sim, <span class="at">col=</span><span class="st">"grey"</span>, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">cex=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span>  <span class="co"># number of points per cluster</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create each cluster with explicit X and Y components</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>cluster1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">X1 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sd),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">X2 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sd),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="dv">1</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>cluster2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">X1 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> sd),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">X2 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sd),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="dv">2</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>cluster3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">X1 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sd),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">X2 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> sd),</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="dv">3</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>cluster4 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">X1 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> sd),</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">X2 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> sd),</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="dv">4</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine all clusters</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>data.sim <span class="ot">&lt;-</span> <span class="fu">rbind</span>(cluster1, cluster2, cluster3, cluster4)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot with cluster labels</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  data.sim<span class="sc">$</span>X1, data.sim<span class="sc">$</span>X2, <span class="at">col =</span> data.sim<span class="sc">$</span>label,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.6</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Simulated Data: 4 Clusters at Corners"</span>,</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"X1"</span>, <span class="at">ylab =</span> <span class="st">"X2"</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -375,15 +400,16 @@ p_K = \Pr\left( \Delta W_K^{\text{perm}} \geq \Delta W_K^{\text{real}} \right)
 </figure>
 </div>
 </div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#legend("topright", legend = paste("Cluster", 1:4), col = 1:4, pch = 16)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I know there are 4 clusters centered at (0,0), (5,0), (0,5), (5,5). Now apply the test:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">permute_k_test</span>(data.sim, <span class="at">K.max=</span><span class="dv">8</span>, <span class="at">B=</span><span class="dv">50</span>, <span class="at">alpha=</span><span class="fl">0.01</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">permute_k_test</span>(data.sim, <span class="at">K.max=</span><span class="dv">8</span>, <span class="at">B=</span><span class="dv">50</span>, <span class="at">alpha=</span><span class="fl">0.01</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>K = 2 : WCSS = 139.7064 , prev WCSS = 9506.497 , Δ = 9366.79 , p = 0 
-K = 3 : WCSS = 109.4906 , prev WCSS = 139.7064 , Δ = 30.21584 , p = 0.96 </code></pre>
+<pre><code>K = 2 : WCSS = 5331.209 , prev WCSS = 11159.57 , Δ = 5828.357 , p = 0 
+K = 3 : WCSS = 2719.054 , prev WCSS = 5331.209 , Δ = 2612.155 , p = 0.1 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Chosen K:"</span>, result, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Chosen K:"</span>, result, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Chosen K: 2 </code></pre>
 </div>
@@ -393,18 +419,18 @@ K = 3 : WCSS = 109.4906 , prev WCSS = 139.7064 , Δ = 30.21584 , p = 0.96 </code
 <p>So it stopped at K=4 correctly. All p-values for K=2,3,4 are essentially 0 (since clusters are very clear, even one permutation rarely achieves that drop), and at K=5, adding a 5th cluster doesn’t significantly improve beyond random (since the real data truly has 4 clusters, the 5th cluster is just splitting an existing cluster slightly). So the method chose K=4, matching ground truth.</p>
 <p>I should test a scenario with no clusters: e.g.&nbsp;data is just one big blob. In that case, I expect it won’t find any significant increase beyond K=1. If I generate uniform random data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>data.unif <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(<span class="dv">200</span><span class="sc">*</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="at">ncol=</span><span class="dv">2</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">permute_k_test</span>(<span class="fu">as.data.frame</span>(data.unif), <span class="at">K.max=</span><span class="dv">5</span>, <span class="at">B=</span><span class="dv">50</span>, <span class="at">alpha=</span><span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>data.unif <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(<span class="dv">200</span><span class="sc">*</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">permute_k_test</span>(<span class="fu">as.data.frame</span>(data.unif), <span class="at">K.max=</span><span class="dv">5</span>, <span class="at">B=</span><span class="dv">50</span>, <span class="at">alpha=</span><span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>K = 2 : WCSS = 19.99769 , prev WCSS = 34.0721 , Δ = 14.0744 , p = 0.12 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># likely res = 1 (no evidence for &gt;1 clusters)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># likely res = 1 (no evidence for &gt;1 clusters)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I would likely get something like p (K=2) around 0.5 or higher (no significant drop), so it stops and returns 1. Indeed, no cluster structure.</p>
 <p>Finally, test on a real dataset (like Iris):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>res_iris <span class="ot">&lt;-</span> <span class="fu">permute_k_test</span>(<span class="fu">as.data.frame</span>(iris[, <span class="sc">-</span><span class="dv">5</span>]), <span class="at">K.max=</span><span class="dv">10</span>, <span class="at">B=</span><span class="dv">100</span>, <span class="at">alpha=</span><span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>res_iris <span class="ot">&lt;-</span> <span class="fu">permute_k_test</span>(<span class="fu">as.data.frame</span>(iris[, <span class="sc">-</span><span class="dv">5</span>]), <span class="at">K.max=</span><span class="dv">10</span>, <span class="at">B=</span><span class="dv">100</span>, <span class="at">alpha=</span><span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>K = 2 : WCSS = 152.348 , prev WCSS = 681.3706 , Δ = 529.0226 , p = 0 
 K = 3 : WCSS = 78.85144 , prev WCSS = 152.348 , Δ = 73.49651 , p = 0 
