@@ -32,13 +32,13 @@ I received a PhD in Biomedical and Pharmaceutical Sciences at the [Université l
 - **[Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals](posts/fwer-correction-part1/index.qmd)**
 - **[Permutation-Based FWER Correction, Part 2: Adjusted P-Values and Inference with Permutation-Based Correction](posts/fwer-correction-part2/index.qmd)**
 - **[Permutation-Based FWER Correction, Part 7: Adjusted P-Values and Inference with Permutation-Based Correction](posts/fwer-correction-part7/index.qmd)**
-- **[Developing a novel cluster number determination for K-means clustering](posts/kmeans-permutation/index.qmd)**
+- **[Developing a novel cluster number determination scheme for K-means clustering](posts/kmeans-permutation/index.qmd)**
 
 ---
 
 ## Recently
 
-- Most learning on a motor task happens during the short periods of rest between trials (i.e. 'offline' learning). Do we also see higher hippocampal ripple rates during these periods? Do these hippocampal ripples correlate with the amount of offline learning? Spoiler alert! **[Our most recent paper was just published in Nature Communications](https://lnkd.in/eSb2vCvD)**  
+- Most learning on a motor task happens during the short periods of rest between trials (i.e. 'offline' learning). Do we also see higher hippocampal ripple rates during these periods? Do these hippocampal ripples correlate with the amount of offline learning? Spoiler alert! **[Our most recent paper was just published in Nature Communications](https://rdcu.be/euu5V)**  
 
 ---
 
