@@ -38,7 +38,7 @@ I received a PhD in Biomedical and Pharmaceutical Sciences at the [Université l
 
 ## Recently
 
-- **[Our most recent paper was just published in Nature Communications](https://lnkd.in/eSb2vCvD)**  
+- Most learning on a motor task happens during the short periods of rest between trials (i.e. 'offline' learning). Do we also see higher hippocampal ripple rates during these periods? Do these hippocampal ripples correlate with the amount of offline learning? Spoiler alert! **[Our most recent paper was just published in Nature Communications](https://lnkd.in/eSb2vCvD)**  
 
 ---
 
