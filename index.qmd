@@ -15,6 +15,9 @@ I received a PhD in Biomedical and Pharmaceutical Sciences at the [Université l
 
 ## Featured Publications
 
+- **[Hippocampal ripples predict motor learning during brief rest breaks in humans (2025)](https://www.nature.com/articles/s41467-025-61136-y)**  
+  Martin Sjøgård*\*, Bryan Bazter, Dimitrios Mylonas, Megan Thompson, Kristi Kwok, Bailey Driscoll, Anabella Tolosa, Wen Shi, Robert Stickgold, Mark Vangel, Catherine J. Chu, Dara S. Manoach. *Nature Communications*, 16(6089).
+
 - **[Brain dysconnectivity relates to disability and cognitive impairment in multiple sclerosis (2021)](https://onlinelibrary.wiley.com/doi/pdf/10.1002/hbm.25247)**  
   Martin Sjøgård*\*, Vincent Wens, Jeroen Van Schependom, Lars Costers, Marie D'hooghe, Miguel D'haeseleer, Mark Woolrich, Serge Goldman, Guy Nagels, Xavier De Tiège. *Human Brain Mapping*, 42(3): 626–643.
 
@@ -23,6 +26,13 @@ I received a PhD in Biomedical and Pharmaceutical Sciences at the [Université l
 
 - **[A novel approach to estimating the cortical sources of sleep spindles using simultaneous EEG/MEG (2022)](https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2022.871166/full)**  
   Dimitrios Mylonas\*, Martin Sjøgård\*, Zhaoyue Shi, Bryan Baxter, Matti Hämäläinen, Dara S Manoach, Sheraz Khan. *Frontiers in Neurology*, 13:871166.
+
+---
+
+## Quick paper summaries
+Want a quick summary of what I’ve been working on? Interested in my research but don’t have time to read complicated and long papers? Are you a family member who’s interested but not that interested? A recruiter wanting to see what I’ve done? Look no further, these quick summaries of my papers will give you an overview without all the details. If you want all the details, the link to the full paper is inside.
+
+- **[Hippocampal ripples predict motor learning during brief rest breaks in humans (2025)](https://www.nature.com/articles/s41467-025-61136-y)**
 
 ---
 
