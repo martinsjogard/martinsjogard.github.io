@@ -1,6 +1,10 @@
 ---
-title: "Martin Sjogard (Sjoegaard / Sjøgård)"
+title: "Martin Sjogard | Neuroscience, Data Science, and Research"
+description: "Portfolio and blog of Martin Sjogard, a neuroscience researcher focused on EEG/MEG, sleep, and clinical data science."
+author: "Martin Sjogard"
+keywords: [neuroscience, EEG, MEG, sleep research, data science, Martin Sjogard]
 format: html
+execute: false
 ---
 
 ## About Me
