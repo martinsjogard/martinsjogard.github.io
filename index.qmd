@@ -4,7 +4,6 @@ description: "Portfolio and blog of Martin Sjogard / Sjoegaard, a neuroscience r
 author: "Martin Sjogard"
 keywords: [neuroscience, EEG, MEG, sleep research, data science, Martin Sjogard]
 format: html
-execute: false
 ---
 
 ## About Me
