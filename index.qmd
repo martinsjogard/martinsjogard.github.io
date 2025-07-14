@@ -1,8 +1,6 @@
 ---
 title: "Martin Sjogard | Neuroscience, Data Science, and Research"
 description: "Brain and data stuff."
-author: "Martin Sjogard"
-keywords: [neuroscience, EEG, MEG, sleep research, data science, Martin Sjoegaard]
 format: html
 ---
 
@@ -10,16 +8,22 @@ format: html
 
 I am a clinical data scientist in the [Sleep, Cognition and Neuropsychology](https://manoachlab.mgh.harvard.edu/) lab at [Massachusetts General Hospital](https://www.massgeneral.org/) and a postdoctoral research fellow at [Harvard Medical School](https://hms.harvard.edu/).
 
-My expertise is in statistical and computational analysis of health-related data, with a focus on neuroimaging and electrophysiological signals in neuropsychiatric disorders. I create and maintain validated, reproducible analysis pipelines and develop advanced statistical methods to support translational research and biomarker discovery. You can read up on some of my methods development work in [anatomically guided MEG/EEG sleep spindle detection](https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2022.871166/full) and [resolving source localization disagreement in resting-state networks](https://www.sciencedirect.com/science/article/abs/pii/S105381191930549X), or my work on [the relationship between cortical network disruption and cognitive impairment in multiple sclerosis](https://onlinelibrary.wiley.com/doi/pdf/10.1002/hbm.25247), how sleep spindles topography relates to memory encoding and consolidation, or how [hippocampal ripples facilitate wake offline learning](https://www.biorxiv.org/content/10.1101/2024.05.02.592200v2).
+My expertise is in statistical and computational analysis of health-related data, with a focus on neuroimaging and electrophysiological signals in neuropsychiatric disorders. I create and maintain validated, reproducible analysis pipelines and develop advanced statistical methods to support translational research and biomarker discovery. You can read up on some of my methods development work in [anatomically guided MEG/EEG sleep spindle detection](https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2022.871166/full) and [resolving source localization disagreement in resting-state networks](https://www.sciencedirect.com/science/article/abs/pii/S105381191930549X), or my work on [the relationship between cortical network disruption and cognitive impairment in multiple sclerosis](https://onlinelibrary.wiley.com/doi/pdf/10.1002/hbm.25247), how sleep spindles topography relates to memory encoding and consolidation, or how [hippocampal ripples facilitate wake offline learning](https://www.nature.com/articles/s41467-025-61136-y).
 
 I received a PhD in Biomedical and Pharmaceutical Sciences at the [Université libre de Bruxelles](https://www.ulb.be/en/ulb-homepage) and hold a master's degree in Neuroscience and a bachelor's degree in Human Movement Science, both from the [Norwegian University of Science and Technology](https://www.ntnu.edu/).
+
+---
+
+## Recently
+
+- Most learning on a motor task happens during the short periods of rest between trials (i.e. 'offline' learning). Do we also see higher hippocampal ripple rates during these periods? Do these hippocampal ripples correlate with the amount of offline learning? Spoiler alert! **[Our most recent paper was just published in Nature Communications](https://rdcu.be/euu5V)**  
 
 ---
 
 ## Featured Publications
 
 - **[Hippocampal ripples predict motor learning during brief rest breaks in humans (2025)](https://www.nature.com/articles/s41467-025-61136-y)**  
-  Martin Sjøgård*\*, Bryan Bazter, Dimitrios Mylonas, Megan Thompson, Kristi Kwok, Bailey Driscoll, Anabella Tolosa, Wen Shi, Robert Stickgold, Mark Vangel, Catherine J. Chu, Dara S. Manoach. *Nature Communications*, 16(6089)
+  Martin Sjøgård*\*, Bryan Baxter, Dimitrios Mylonas, Megan Thompson, Kristi Kwok, Bailey Driscoll, Anabella Tolosa, Wen Shi, Robert Stickgold, Mark Vangel, Catherine J. Chu, Dara S. Manoach. *Nature Communications*, 16(6089)
 
 - **[Brain dysconnectivity relates to disability and cognitive impairment in multiple sclerosis (2021)](https://onlinelibrary.wiley.com/doi/pdf/10.1002/hbm.25247)**  
   Martin Sjøgård*\*, Vincent Wens, Jeroen Van Schependom, Lars Costers, Marie D'hooghe, Miguel D'haeseleer, Mark Woolrich, Serge Goldman, Guy Nagels, Xavier De Tiège. *Human Brain Mapping*, 42(3): 626–643
@@ -47,12 +51,6 @@ Want a quick summary of what I’ve been working on? Interested in my research b
 - **[Permutation-Based FWER Correction, Part 2: Adjusted P-Values and Inference with Permutation-Based Correction](posts/fwer-correction-part2/index.qmd)**
 - **[Permutation-Based FWER Correction, Part 7: Adjusted P-Values and Inference with Permutation-Based Correction](posts/fwer-correction-part7/index.qmd)**
 - **[Developing a novel cluster number determination scheme for K-means clustering](posts/kmeans-permutation/index.qmd)**
-
----
-
-## Recently
-
-- Most learning on a motor task happens during the short periods of rest between trials (i.e. 'offline' learning). Do we also see higher hippocampal ripple rates during these periods? Do these hippocampal ripples correlate with the amount of offline learning? Spoiler alert! **[Our most recent paper was just published in Nature Communications](https://rdcu.be/euu5V)**  
 
 ---
 
