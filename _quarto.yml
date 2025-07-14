@@ -18,8 +18,8 @@ website:
           - text: "Developing a novel cluster number determination for K-means clustering"
             href: posts/kmeans-permutation/index.qmd
     right:
-      - text: "About"
-        href: about.qmd
+        - icon: linkedin
+          href: https://www.linkedin.com/in/martinsjogard/
 
 format:
   html:
