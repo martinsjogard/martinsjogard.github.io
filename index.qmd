@@ -1,6 +1,6 @@
 ---
 title: "Martin Sjogard | Neuroscience, Data Science, and Research"
-description: "Neuroscience, sleep, statistics, and clinical data science."
+description: "Brain and data stuff"
 author: "Martin Sjogard"
 keywords: [neuroscience, EEG, MEG, sleep research, data science, Martin Sjogard, Martin Sjoegaard]
 format: html
