@@ -20,6 +20,10 @@ website:
     right:
         - icon: linkedin
           href: https://www.linkedin.com/in/martinsjogard/
+        - icon: envelope
+          href: mailto:martinsjogard@gmail.com
+        - icon: mortarboard-fill
+          href: https://scholar.google.com/citations?user=F59U3gEAAAAJ&hl=en
 
 format:
   html:
