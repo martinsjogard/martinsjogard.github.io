@@ -13,12 +13,13 @@ about:
       text: LinkedIn
       href: https://www.linkedin.com/in/martinsjogard/
     - icon: file-text
-      text: GoogleScholar
+      text: Google Scholar
       href: https://scholar.google.com/citations?hl=en&user=F59U3gEAAAAJ&view_op=list_works&sortby=pubdate
 
 ---
 
 ## About Me
+On the left is a 3D printed model of my own actual brain, made from an MRI scan.
 
 I am a clinical data scientist in the [Sleep, Cognition and Neuropsychology](https://manoachlab.mgh.harvard.edu/) lab at [Massachusetts General Hospital](https://www.massgeneral.org/) and a postdoctoral research fellow at [Harvard Medical School](https://hms.harvard.edu/).
 
