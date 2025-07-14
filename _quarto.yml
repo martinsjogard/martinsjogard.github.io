@@ -1,5 +1,7 @@
 project:
   type: website
+  resources: 
+        - CV_Martin_Sjogard.pdf
 
 website:
   title: "Martin Sjogard"
@@ -24,6 +26,9 @@ website:
           href: mailto:martinsjogard@gmail.com
         - icon: mortarboard-fill
           href: https://scholar.google.com/citations?user=F59U3gEAAAAJ&hl=en
+        - icon: file-text
+          text: CV
+          href: CV_Martin_Sjogard.pdf
 
 format:
   html:
