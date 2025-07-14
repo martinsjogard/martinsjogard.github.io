@@ -1,7 +1,21 @@
 ---
 title: "Martin Sjogard | Neuroscience, Data Science, and Research"
-description: "Brain and data stuff."
+subtitle: "Brain and data stuff."
 format: html
+
+about: 
+  template: trestles
+  image: profile.jpg
+  image-alt: Yellow brain
+  image-shape: round
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/martinsjogard/
+    - icon: file-text
+      text: GoogleScholar
+      href: https://scholar.google.com/citations?hl=en&user=F59U3gEAAAAJ&view_op=list_works&sortby=pubdate
+
 ---
 
 ## About Me
