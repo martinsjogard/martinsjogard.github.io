@@ -1,0 +1,13 @@
+---
+title: "Quick paper summary: Increased sleep spindles in regions engaged during motor learning predict memory consolidation (2025)"
+author: "Martin Sjogard"
+date: 2025-07-10
+format: html
+page: true
+categories: [Neuroscience, Sleep, Spindles, Memory, Learning, Consolidation]
+---
+
+This is a non-technical (or at least less technical) summary of the paper "Increased sleep spindles in regions engaged during motor learning predict memory consolidation" by Sjøgård et al. (2025), which was recently published in Journal of Neuscience.
+
+
+## Background: Learning and consolidation

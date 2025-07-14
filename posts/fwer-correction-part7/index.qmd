@@ -1,0 +1,20 @@
+---
+title: "Adjusted P-Values and Inference with Permutation-Based Correction"
+author: "Martin Sjogard"
+date: 2025-06-21
+format: html
+page: true
+categories: [Statistics, Neuroscience, R]
+---
+In this post, I delve into adjusted p-values in the context of permutation-based family-wise error rate (FWER) correction. I will define adjusted p-values formally, derive them from the permutation max-statistic distribution, and explain why using adjusted p-values controls the FWER. I also provide R code to compute adjusted p-values on synthetic data, and discuss when to use adjusted p-values versus a threshold-based correction approach. Throughout, I try to maintain a rigorous but accessible tone, with intuitive explanations for my specific collaborators/trainees and examples from neuroscience (e.g. MEG/EEG parcel-level analysis) and other fields.
+
+Formal Definition of Adjusted P-Values
+When multiple hypothesis tests are performed together (forming a family of tests), an adjusted p-value for a given hypothesis is the p-value recalibrated to account for the multiple testing. Formally, the adjusted p-value for hypothesis $H_{0,i}$ is defined as the smallest significance level $\alpha$ at which $H_{0,i}$ would be rejected, given that the entire family of tests is considered. In other words, $p_{i,\text{adj}} = \inf{\alpha: H_{0,i}$ is rejected by the multiple-testing procedure at level $\alpha$. If we reject all hypotheses with $p_{i,\text{adj}} < \alpha$, then by construction the procedure controls the family-wise error rate at (or below) $\alpha$.
+
+Adjusted p-value via max-statistic: For each hypothesis $i$, the permutation adjusted p-value $p_{i,\text{adj}}$ can be obtained by comparing the observed test statistic $T_i^{obs}$ to the max-statistic null distribution. Specifically, if larger $T$ indicates greater significance (right-tailed test), the adjusted p-value is the probability of seeing a max statistic as extreme as $T_i^{obs}$ under the null. Formally: 
+
+$$
+p_{i,\text{adj}} = \Pr\left(\max_{1\leq j\leq m} T_j \geq T_i^{\text{obs}}\right)
+$$
+
+The numerator counts.

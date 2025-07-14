@@ -1,0 +1,152 @@
+---
+title: "Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals"
+author: "Martin Sjogard"
+date: 2024-06-21
+format: html
+page: true
+categories: [Statistics, Neuroscience, R]
+---
+
+I very commonly get questions about nonparametric statistical control from collaborators, and I have been maintaining some personal notes that I tend to distribute to them on request. Here, I have modified them significantly with the intention of making them readable for the younger trainees who also ask me about these things. It should (hopefully) be readable for my collaborators of any background (psychology undergrads, physicians, engineers, neuroscientists).
+
+I will periodically update it with more of my notes. The notes start with establishing some common understanding of hypothesis testing, the concept of a test statistic, distributions of a repeated statistic under the null, and the need for thresholding, then walks (or rambles) through multiple comparisons as a concept, various resampling approaches, some permutation intuition, and finally to the permutation-based family-wise error rate correction and the maximum statistic. The goal is to have the reader think about how distributions are generated under specific constraints and assumptions, and how thresholding these distributions directly relate to the questions we're asking of the data. I find that these permutation-based/non-parametric concepts manage what standard courses on parametric statistics taught in every psychology stats class never does: to instill statistical intuition in people. 
+
+Before diving into permutation tests and error correction, it’s essential to establish a strong foundation in basic statistical inference. In this first post, I will cover the fundamentals of hypothesis testing: what hypotheses are, how we use test statistics, the meaning of Type I errors and significance levels, what it means to “reject $H_0$,” and an intuitive introduction to p-values. I will also walk through a simple example (with R code) to illustrate these concepts in practice.
+
+## Null and Alternative Hypotheses
+A **statistical hypothesis** is a claim or conjecture about a population or process that can be tested with data. In hypothesis testing, we usually have two competing hypotheses:
+
+* **Null hypothesis ($H_0$)**: This is the default or status quo hypothesis that there is no effect or no difference. It often represents a baseline assumption or “no change” scenario.
+
+* **Alternative hypothesis ($H_1$ or $H_A$):**: This is the hypothesis that there is an effect, a difference, or a deviation from the null. It typically represents what we are trying to find evidence for.
+
+These two hypotheses are *complementary*: if one is true, the other is false. We design a test to decide whether the data provide sufficient evidence to **reject $H_0$ in favor of $H_1$**. Importantly, we begin by assuming $H_0$ is true (akin to “innocent until proven guilty” in a trial) and then ask whether the data are unlikely enough under that assumption to warrant rejecting it. The alternative hypothesis can be *one-sided* (e.g., an increase in mean, but not a decrease) or *two-sided* (any difference, either an increase or decrease).
+
+**A general example**: Suppose we are testing a new drug.
+
+* $H_0$: The drug has no effect on blood pressure (mean change = 0).
+
+* $H_1$: The drug does have an effect (mean change ≠ 0).
+
+**A neuroimaging example**: In a brain imaging study, we might test if a particular brain region is more active during a task than at rest.
+
+* $H_0$: No difference in brain activity between task and rest in that region.
+
+* $H_1$: A significant difference in activity exists between task and rest.
+
+In both cases, $H_0$ posits “no change/effect,” and $H_1$ posits “some change/effect.” The goal of the test is not to *prove* $H_0$ (we generally assume $H_0$ true until evidence shows otherwise), but rather to determine if we have enough evidence to reject $H_0$ and infer $H_1$.
+
+
+## Test Statistic
+To carry out a hypothesis test, we need a **test statistic** – a numerical summary of the data that we can use to decide between $H_0$ and $H_1$. The test statistic is chosen based on the problem and hypotheses; it should capture the effect we are looking for. Common examples include:
+
+* The difference between two group means (for testing if two groups differ).
+
+* A proportion or count of “successes” (for testing rates or probabilities, like the number of heads in coin flips).
+
+* A correlation coefficient (for testing association between variables).
+
+The key property of a test statistic is that we know (or can determine) its *probability distribution* when $H_0$ is true. This distribution under the null hypothesis is called the **null distribution** of the test statistic. Knowing the null distribution allows us to quantify how extreme our observed statistic is, assuming $H_0$ is correct. For example, if our test statistic is the number of heads in 100 coin flips and $H_0$ states the coin is fair, the null distribution of the statistic is a Binomial(100, 0.5) distribution (the distribution of heads counts for a fair coin).
+
+**Why do we need a test statistic?** It provides a standardized way to evaluate evidence. Raw data can be messy, but a well-chosen statistic (like a mean difference or a $t$-value) condenses the information into a single number that we can compare against a reference distribution. If the observed test statistic falls in a range that would be very unusual under $H_0$ (e.g., far in the tail of the null distribution), it suggests the data are not consistent with $H_0$.
+
+## Type I Error and Significance Level
+When making decisions based on data, we must acknowledge the possibility of errors. In hypothesis testing, there are two fundamental error types:
+
+* **Type I error (false positive)**: Rejecting the null hypothesis when it is actually true. In other words, a false alarm – we think we found an effect, but there is none. This is analogous to convicting an innocent person in a trial.
+
+* **Type II error (false negative)**: Failing to reject the null hypothesis when the alternative is true. In other words, a miss – there is a real effect, but our test failed to detect it. Analogously, a guilty person goes free due to lack of evidence.
+
+Because we never have absolute certainty (we rely on samples of data), we cannot eliminate these errors entirely. Instead, we control their probabilities. The **significance level of a test**, denoted $\alpha$, is the probability of making a Type I error that we are willing to tolerate. Common choices are $\alpha = 0.05$ (5%) or $\alpha = 0.01$ (1%). For example, $\alpha = 0.05$ means that if $H_0$ is true, we are willing to accept a 5% chance of mistakenly rejecting it (5% false positive rate). In practical terms, $\alpha=0.05$ means that if $H_0$ is true, the kind of result we deem “significant” would be expected less than 5% of the time by random chance. Note! This is a common way to talk about these values in general but not strictly correct. When I discuss distributions and thresholds more later I will point out the issues with this phrasing.
+
+The significance level defines a **threshold for significance**: if the evidence against $H_0$ is strong enough that the probability of seeing such evidence under $H_0$ is less than $\alpha$, we will reject $H_0$. This threshold can be equivalently thought of in terms of critical values of the test statistic (more on that later) or p-values (coming up next).
+
+It’s important to note that $\alpha$ is set by the researcher *before* seeing the data. This prevents bias in deciding what is “significant.” The smaller $\alpha$ is, the more stringent the test (lower chance of false positive, but higher chance of missing a real effect, i.e., higher Type II error). In the context of multiple comparisons (many tests at once, as often occurs in neuroscience with many brain measurements), controlling the family-wise error rate is essentially about managing the overall Type I error – we’ll get to that in a later post. 
+
+Side note: Continuing the courtroom analogy – if we treat “innocent until proven guilty” as $H_0$, a Type I error is convicting an innocent person, and we set a high bar (stringent $\alpha$) to avoid that. A Type II error is letting a guilty person go free. The significance level is like the “beyond a reasonable doubt” threshold: we decide how much evidence is enough to reject innocence. In hypothesis testing, $\alpha$ is our chosen threshold for doubt. For example, using $\alpha = 0.01$ is like requiring very strong evidence to convict, minimizing false convictions (Type I errors) at the expense of potentially acquitting more truly guilty defendants (some increased Type II errors).
+
+
+## Rejecting $H_0$: What Does it Mean?
+When we say “reject $H_0$”, it means the sample data are sufficiently inconsistent with $H_0$ that we decide $H_0$ is unlikely to be true. In practice, rejecting $H_0$ implies accepting $H_1$ (or at least concluding that there is evidence in favor of $H_1$). A result that leads to rejection is often called “statistically significant” at the chosen $\alpha$ level. This does not mean $H_1$ is proven true in all cases, only that $H_0$ is implausible given the data. We make this decision with a controlled Type I error rate (if $H_0$ is true, we’ll only mistakenly reject it $\alpha$ fraction of the time in repeated experiments).
+
+Conversely, if we “fail to reject $H_0$,” it means the data did not provide strong enough evidence against $H_0$. Important: Failing to reject is not the same as accepting $H_0$ as true – it simply means we do not have sufficient evidence to say it’s false. It’s possible that $H_0$ is false but our sample was not extreme enough (this would be a Type II error). Thus, “not significant” does not prove the null, it only indicates lack of evidence to reject it. 
+
+In summary:
+
+* **Reject $H_0$ (Significant result)**: Data are unlikely under $H_0$ (p-value ≤ α). We infer evidence for $H_1$.
+
+* **Do not reject $H_0$ (Non-significant)**: Data are not sufficiently unusual under $H_0$ (p-value > α). We cannot conclude $H_1$; $H_0$ remains plausible.
+
+This decision process ensures a controlled false positive rate. If $H_0$ is actually true, the chance we incorrectly reject it is α (by design). For example, with α = 0.05, over many repeated experiments with true nulls, about 5% would yield (erroneous) significant results just by chance.
+
+## An Intuitive Introduction to p-Values
+Up to now, I’ve talked about “evidence” and outcomes being “unlikely under $H_0$.” The tool that quantifies this is the p-value. We will give a precise definition in the next post, but conceptually: The p-value is a measure of how surprising the observed data would be if the null hypothesis were true. It answers the question: *“If $H_0$ is true, what is the probability of obtaining a result at least as extreme as what we observed?”*
+
+A high p-value (say 0.5) means our result is quite ordinary under $H_0$ (nothing surprising). A very low p-value (say 0.001) means our result would be very rare if $H_0$ were true, indicating that either we saw a fluke or, more plausibly, $H_0$ is false. Some intuitive points about p-values:
+
+* **Small p-value = evidence against $H_0$**: If the data would hardly ever occur under $H_0$, we have reason to doubt $H_0$. For example, getting 95 heads out of 100 coin flips (p-value extremely small under a fair-coin hypothesis) strongly suggests the coin is not fair.
+
+* **Moderate/large p-value = consistency with $H_0$**: If the data are fairly typical under $H_0$, we have no grounds to reject it. E.g., 52 heads out of 100 (p ≈ 0.39 for a fair coin) is quite a common outcome — nothing suspicious.
+
+* **Threshold comparison**: We compare the p-value to α. If p ≤ α, the result is statistically significant (reject $H_0$); if p > α, it’s not significant (fail to reject $H_0$). This is equivalent to the critical-value approach but more directly answers the “how rare is this result under $H_0$?” question.
+
+* **One-tailed vs Two-tailed**: The p-value calculation depends on $H_1$. If $H_1$ is one-sided (e.g., an increase in mean), we calculate the probability of results as extreme as the observed in that direction. If $H_1$ is two-sided (any difference), we consider extremeness in both directions (e.g., both high and low extremes). Two-tailed tests essentially double-count the tail area corresponding to the observed result’s extremeness.
+
+A common misconception is that the p-value is the probability that $H_0$ is true given the data. **This is NOT what the p-value represents**. The p-value is calculated under the assumption that $H_0$ is true; it is *not* the probability of $H_0$ itself. It also isn’t the probability that $H_1$ is true. Instead, it’s about the data: assuming no real effect ($H_0$), how surprising is what we observed? To cement these ideas, let’s walk through a simple example and see how to compute a p-value and make a decision.
+
+## Example: Testing a Coin for Fairness (with R code)
+
+Imagine you have a coin and you suspect it might be biased (not fair). We can frame this as a hypothesis test:
+
+* $H_0$: The coin is fair (probability of heads $p = 0.5$).
+
+* $H_1$: The coin is not fair ($p \neq 0.5$, two-sided alternative).
+
+
+We decide to flip the coin $n=20$ times and count the number of heads. Our test statistic will be the number of heads in 20 flips. Under $H_0$ (fair coin), the null distribution of this statistic is $\text{Binomial}(n=20, p=0.5)$. Let’s say we perform the experiment. Below is some R code to simulate the coin flips and conduct the test:
+
+```{r}
+# Set seed for reproducibility
+set.seed(42)
+
+# Define number of flips
+n <- 20
+
+# Simulate 20 coin flips (H = "heads", T = "tails")
+flips <- sample(c("H", "T"), size = n, replace = TRUE, prob = c(0.5, 0.5))
+flips  # show the sequence of flips
+
+# Count the number of heads
+num_heads <- sum(flips == "H")
+num_heads  # print the number of heads observed
+
+# Perform a two-sided test for fairness:
+# H0: p = 0.5, H1: p != 0.5
+test_result <- binom.test(num_heads, n, p = 0.5, alternative = "two.sided")
+test_result
+```
+
+Explanation: I used sample() to simulate 20 flips of a fair coin. I then count heads. The function binom.test() performs an exact binomial test for the null hypothesis $p=0.5$. The output of binom.test will include a p-value. 
+
+If you run this code, you’ll get a certain number of heads (because of randomness, it could be different each run). For instance, one simulation might yield num_heads = 12 out of 20. In that case, the test result will show a p-value (for 12 heads, p ≈ 0.503). This high p-value indicates 12/20 heads is very consistent with a fair coin (no evidence against $H_0$). We would *fail to reject* $H_0$ at α = 0.05. 
+
+Now, to see what a significant result would look like, let’s consider a more extreme outcome. Imagine we had observed num_heads = 17 out of 20. Intuitively, 17 heads in 20 flips is quite unlikely if the coin is fair. We can calculate the p-value for 17 heads:
+
+```{r}
+# Compute p-value for observing 17 or more heads out of 20 if p=0.5
+p_val <- sum(dbinom(17:20, size = 20, prob = 0.5))
+p_val
+```
+
+This sums the probabilities of getting 17, 18, 19, or 20 heads under a fair coin (two-tailed test would also include the equally unlikely lower tail: 0–3 heads). The resulting one-tail probability for ≥17 heads is very small (around 0.0013), and doubling for two tails gives ~0.0026. Indeed, binom.test(17, 20, 0.5) would return p ≈ 0.0026. This p-value is *far below* 0.05, so such an outcome would be deemed *highly significant*. We would reject $H_0$ and conclude the coin is likely biased.
+
+To summarize the coin test example:
+
+* If we observe a moderate number of heads (say 8, 10, 12, etc.), the p-value is high (well above 0.05).  We do not have evidence to reject $H_0$; the coin could well be fair.
+
+* If we observe an extreme number of heads (like 17 out of 20), the p-value is very low (≪ 0.05). This is significant evidence against $H_0$; we reject fairness and suspect the coin is biased.
+
+* Our test controlled the Type I error at 5%. If the coin were actually fair, there’s only a 5% chance that we’d see a result as extreme as to falsely conclude bias.
+
+
+This simple example highlights how hypothesis testing works in practice: define $H_0$ and $H_1$, choose a test statistic and significance level, collect data, compute a p-value (or compare to a critical value), and decide whether or not to reject $H_0$. We used a **p-value approach** here (directly computing the probability of the observed outcome under $H_0$). Alternatively, one could use a **critical value approach**: for instance, for α = 0.05 in the two-sided coin test, the critical region would be ≤3 heads or ≥17 heads (the most extreme 5% of the null distribution). Indeed, 17 heads was the cutoff — that’s why 17 gave p ~0.0026 (half of the 5% two-tailed region). 

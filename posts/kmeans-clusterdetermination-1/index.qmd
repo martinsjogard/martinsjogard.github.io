@@ -1,0 +1,116 @@
+---
+title: "Part 1: Foundations of Clustering and K-Means"
+author: "Martin Sjogard"
+date: 2025-01-21
+format: html
+page: true
+categories: [Statistics, Neuroscience, R]
+---
+
+I have been working a lot with k-means clustering, especially finding a good way to set the number of clusters (i.e., *k*). Some of the approaches are outright not useable for my specific use cases, while others are good in certain areas and bad in others. I've been using this blog space to formalize some thoughts while trying to develop alternative approaches to setting the appropriate *k*. Some background is provided first, to properly set the stage for the coming suggested changes to the current best models in use in the literature.
+
+## Introduction to Clustering
+Clustering is the task of grouping a set of objects such that those in the same group (cluster) are more similar to each other than to those in other groups. In essence, a good clustering yields **high intra-cluster** similarity and **low inter-cluster** similarity. This is a form of *unsupervised learning*, meaning the data come without predefined category labels – the algorithm must discover any natural groupings. Humans intuitively cluster things all the time (e.g. grouping books by genre or animals by species), and clustering algorithms aim to mimic this by detecting structure in data without explicit guidance.
+
+Clustering has a rich history across disciplines. The concept originated in anthropology in the early 1930s and was introduced to psychology by Joseph Zubin (1938) and Robert Tryon (1939). Over decades, many clustering methods have been developed, from *hierarchical* algorithms that build tree-like partitions to *partitional* algorithms that directly partition data into a set number of clusters. The very notion of a “cluster” is somewhat philosophical: there isn’t a single rigorous definition, which is why dozens of clustering algorithms exist. Each algorithm embodies a different idea of what constitutes a cluster (compactness, density, connectedness, etc.) and is suited to different data shapes and contexts.
+
+In practice, clustering is a fundamental tool in exploratory data analysis, used in fields as diverse as biology (e.g. grouping cells by gene expression), marketing (segmenting customers), image analysis, and neuroscience. For example, neuroscientists might use clustering to group neurons with similar activity patterns, or to identify distinct patient subtypes from brain scan data. Philosophically, clustering touches on the problem of **category formation** – how to draw boundaries in a continuum of observations. The brain itself performs a form of clustering when it categorizes sensory inputs into perceptions (think of how we segment colors into discrete categories or group similar sounds into phonemes). Thus, beyond its mathematical formulation, clustering resonates with how we naturally seek patterns and order in the world.
+
+## The K-Means Clustering Algorithm
+One of the most popular and straightforward partitional clustering methods is K-means clustering. K-means is a centroid-based clustering algorithm: it represents each cluster by the mean (centroid) of its members, and tries to find the optimal positions of these centroids.
+
+### Intuition and Objective
+Intuitively, K-means seeks to partition the data into **K clusters* (where K is a chosen constant) such that each data point belongs to the cluster with the nearest centroid. It’s like placing K points (“centers”) in the space and assigning each observation to the closest center; then moving the centers to the average of the points assigned to them, and repeating until things stabilize. The objective is to minimize the total within-cluster variance, often expressed as the within-cluster sum of squares (WCSS) or “inertia.” Formally, if we denote clusters by $S_1, S_2, ..., S_K$ and $\mu_i$ as the mean (centroid) of cluster $i$, K-means aims to solve:
+
+$$
+\arg\min_{S_1, \ldots, S_K} \sum_{i=1}^{K} \sum_{\mathbf{x} \in S_i} \left\| \mathbf{x} - \boldsymbol{\mu}_i \right\|^2
+$$
+
+i.e. find the partition $S = {S_1,\dots,S_K}$ that minimizes the sum of squared Euclidean distances of points from their cluster centroids. This objective is a non-convex optimization problem, known to be NP-hard in general for an arbitrary number of clusters K. However, the beauty of K-means lies in a simple iterative heuristic (often called Lloyd’s algorithm or the K-means algorithm) that usually converges quickly to a good solution in practice.
+
+### The K-Means Algorithm Steps
+The K-means algorithm works as follows:
+
+* 1. Initialization: Choose K initial centroids. These can be selected randomly from the data points or via smarter schemes (like K-means++ which picks initial centers probabilistically to spread them out).
+
+* 2. Assignment step: Assign each data point to the nearest centroid (using Euclidean distance). This forms K clusters based on current centroid locations.
+
+* 3. Update step: For each cluster, recompute the centroid as the mean of all points assigned to that cluster (i.e. update $\mu_i$ to be the average of points in $S_i$).
+
+* 4. Repeat: Iterate the assignment and update steps until convergence – typically until no points change clusters or until the centroids move negligibly. At convergence, the algorithm has reached a locally optimal partition with respect to the objective.
+
+This iterative process is guaranteed to decrease the WCSS at each step and will eventually terminate (because there are a finite number of possible partitions). The output is a set of final cluster centroids and an assignment of each data point to one of the K clusters.
+
+Mathematically, you can show that in the update step, the choice of the mean minimizes the sum of squared distances: given a cluster assignment, the best centroid (in terms of minimizing squared distance) is the arithmetic mean of the points. This justifies using the mean in step 3. Thus, K-means alternates between fixing cluster memberships (to recompute means) and fixing means (to reassign memberships), which is a special case of the more general *Expectation-Maximization (EM)* procedure for Gaussian mixture models. The algorithm typically converges in a few iterations for moderate-sized datasets, though it is not guaranteed to find the global minimum of the objective (it finds a local minimum, which can depend on the initialization).
+
+
+### Distance Metric and Space
+**Distance measure**: K-means, as described, relies on *Euclidean distance* because the use of arithmetic mean as centroid implicitly assumes minimizing squared Euclidean distances. If one tried to use a different distance (say Manhattan $L_1$ distance), the centroid (minimizer) would no longer be the arithmetic mean – in fact for $L_1$ it would be the median. There are clustering variants like K-medians or K-medoids (PAM) that use other distance metrics and representative points (medoids), but standard K-means is inherently tied to Euclidean geometry.
+
+**Feature scaling**: Because it uses distance, K-means is sensitive to the scale of features. It’s common to standardize or normalize features before clustering so that one feature doesn’t dominate due to larger numerical range. For example, if one feature is in units of dollars and ranges in the thousands while another is a ratio between 0 and 1, Euclidean distance would mostly reflect differences in the dollar feature unless we scale the data.
+
+**Data types**: K-means requires numeric data in a metric space. It cannot handle categorical features directly (because means and Euclidean distances aren’t defined for categories). For non-numeric data or arbitrary distance measures, other clustering algorithms (hierarchical with custom distance, density-based clustering, etc.) are more appropriate. So, K-means is best suited for continuous-valued vector data where a notion of “cluster center” as a mean makes sense.
+
+### A Simple Demonstration in R
+Let’s walk through a demonstration of K-means in R using the classic **Iris dataset**. This dataset (Fisher’s iris) has 150 samples of iris flowers, measured by 4 features (sepal length, sepal width, petal length, petal width) and known species labels (setosa, versicolor, virginica). We will ignore the species labels and see if K-means can discover the natural groupings. First, we load and inspect the data, then run K-means with K=3 (since we happen to know there are 3 species, we’ll use that for illustration). We’ll also scale the features for fair distance measurement:
+
+```{r}
+# Load the iris dataset and scale features
+data(iris)
+iris.features <- scale(iris[, -5])   # exclude the species column
+
+# Perform K-means clustering with K = 3 clusters
+set.seed(42)  # for reproducibility
+km3 <- kmeans(iris.features, centers = 3, nstart = 20)
+
+# Output the clustering result
+print(km3)
+```
+
+Suppose the output is something like this (your numbers might differ slightly due to random initialization):
+
+Within cluster sum of squares by cluster: 15.151 23.879 39.820
+(between_SS / total_SS =  88.4%)
+
+This tells us: the algorithm found 3 clusters with sizes 50, 38, and 62. The cluster means for each feature are listed (cluster 1 has smaller petal lengths and widths, etc., which we recognize as the setosa species characteristics, whereas clusters 2 and 3 correspond to versicolor and virginica mixes). The within-cluster sum of squares for each cluster is given (which sum up to the total WCSS), and it also reports that ~88.4% of the total variance is explained by the clustering (so the between-cluster SS is 88.4% of total SS). A high between-SS/total-SS means clusters are well-separated.
+This tells us: the algorithm found 3 clusters with sizes 50, 38, and 62. The cluster means for each feature are listed (cluster 1 has smaller petal lengths and widths, etc., which we recognize as the setosa species characteristics, whereas clusters 2 and 3 correspond to versicolor and virginica mixes). The within-cluster sum of squares for each cluster is given (which sum up to the total WCSS), and it also reports that ~88.4% of the total variance is explained by the clustering (so the between-cluster SS is 88.4% of total SS). A high between-SS/total-SS means clusters are well-separated.
+
+We can also examine the clustering assignment versus the true species:
+
+```{r}
+# Compare clusters to true species
+table(Cluster = km3$cluster, Species = iris$Species)
+
+```
+
+Cluster 1 perfectly corresponds to Setosa (50/50 setosa in that cluster). Clusters 2 and 3 split Versicolor and Virginica: cluster 2 is mostly Virginica with a few Versicolor, and cluster 3 vice versa. This reflects that Versicolor and Virginica are more similar to each other, and indeed K-means (which doesn’t know the species labels) grouped some of them together. In fact, many clustering algorithms will have trouble separating versicolor vs virginica perfectly because their measurements overlap; Setosa, on the other hand, is distinct (and K-means clearly separated it). This illustrates both the capability and the limitation of clustering: it found meaningful structure (setosa vs non-setosa) but also shows that “ground truth” classes aren’t always cleanly separable by the available features
+
+
+**Visualization**: We can visualize the clustered data. Since it’s 4-D, we’ll use the first two principal components for plotting. In R, we can plot the results (e.g. using `autoplot(km3, data=iris.features, frame=TRUE)` from the `ggfortify` package to plot in principal component space automatically). The clustering has partitioned the data into cohesive groups: points in the same cluster are closer to their centroid than to other centroids by construction.
+
+## Advantages and Limitations of K-Means
+K-means is popular for many reasons. Advantages include its simplicity and efficiency: the algorithm is easy to implement and understand (just loop between assignment and mean recomputation), and it’s computationally efficient, $O(n \times K \times d)$ per iteration (where n is number of points, d is dimension). It often converges in relatively few iterations, and can handle large datasets. It also tends to produce tighter, spherical clusters which are often desirable.
+
+However, K-means has important limitations and assumptions to be aware of:
+
+* **You must choose K in advance**: The algorithm requires the number of clusters K as input. Choosing the “right” K is a non-trivial task (this is the focus of Part 2). Without external guidance or careful evaluation, one might under- or over-cluster the data.
+
+* **Sensitivity to initialization**: Different random initial centroids can lead to different final clusters (because the algorithm can get stuck in different local minima of the objective). It’s common to run K-means multiple times (the `nstart` parameter in R) and take the best result. Methods like K-means++ help by providing a smarter initialization that often yields better results.
+
+* **Assumes roughly spherical, equally sized clusters**: K-means implicitly assumes clusters are convex and isotropic in the feature space. It tries to make clusters of comparable variance (because every cluster is represented by a centroid and distance threshold). If the true clusters are elongated, or irregularly shaped, or have hugely different sizes, K-means may perform poorly. For example, it may split one true cluster into two if it’s elongated, or merge two true clusters if one is much larger (dominates the mean) or if they’re close together. Hierarchical or density-based methods might capture such structures better.
+
+* **Euclidean distance only / mean-based**: As mentioned, K-means can’t handle arbitrary distance metrics or categorical data. All features contribute squared distance to the centroid. If your data has categorical variables or you want to use a custom distance metric (like cosine similarity for text vectors), standard K-means is not applicable (though you might use K-medoids or other algorithms designed for general distances).
+
+* **Sensitive to outliers**: The mean is not robust – even a single extreme outlier can pull a centroid significantly, affecting the cluster. K-means will assign outliers to the nearest cluster, but that can skew the centroid and degrade clustering of other points. If your data has outliers, sometimes a preprocessing step to remove or downweight them, or using a more robust clustering (like K-medoids which uses medians), is recommended.
+
+* **Non-deterministic and local optima**: Because of the random initialization and iterative improvement, K-means can end up in a suboptimal partition (a local minimum of the WCSS). In practice, repeated runs and choosing the best outcome is the standard approach to mitigate this. There are also global optimization variants and cluster ensemble methods if needed.
+
+* **Scales poorly with very high-dimensional data*: In extremely high dimensions, distance measures become less informative (the “curse of dimensionality”). Points tend to all be nearly equidistant in high-D space, so the notion of nearest centroid gets noisy. K-means doesn’t inherently mitigate this, so it might not find meaningful clusters if d is very large unless you first apply dimension reduction (PCA, t-SNE, etc.). This isn’t unique to K-means, but it’s a general challenge for distance-based clustering.
+
+Despite these limitations, K-means often works surprisingly well on a wide variety of problems, especially when clusters are roughly spherical in feature space and well-separated. Its simplicity makes it a good baseline clustering method. In cases where its assumptions don’t hold, more advanced methods can be used, but K-means remains a workhorse for quick clustering tasks.
+
+**Alternatives**: If you encounter some of the above issues, alternatives to consider include *hierarchical clustering* (which can use other distances and doesn’t require a fixed K upfront), DBSCAN (density-based, finds arbitrarily shaped clusters and can detect outliers as noise), *Gaussian mixture models* (soft clustering using probabilistic assignments and able to model different cluster shapes via covariance), K-medoids/PAM (uses medoids and any distance, more robust to outliers), among others. We won’t dive into these here, but it’s worth noting that K-means is one tool among many.
+
+
+## Conclusion (Part 1)
+I've covered the foundations of clustering and the K-means algorithm, balancing an intuitive understanding with the formal objective. K-means exemplifies how a simple iterative process can produce meaningful structure from unlabelled data, but it also illustrates key challenges like choosing the number of clusters and handling various data peculiarities. In the next part, we’ll tackle the problem we left open: how do we determine the appropriate number of clusters (K) for K-means or any clustering? This is often called the “$K$ dilemma,” and as I will show, many methods have been proposed to resolve it.
