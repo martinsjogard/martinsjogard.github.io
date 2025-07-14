@@ -24,10 +24,6 @@ website:
           href: mailto:martinsjogard@gmail.com
         - icon: mortarboard-fill
           href: https://scholar.google.com/citations?user=F59U3gEAAAAJ&hl=en
-  sidebar:
-    tools:
-      - icon: github
-        href: https://github.com/martinsjogard
 
 format:
   html:
