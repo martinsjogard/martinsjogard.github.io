@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Martin Sjogard">
+<meta name="dcterms.date" content="2024-06-21">
+
+<title>Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals – Martin Sjogard</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a986a95301e671fce2c6472dffc862a1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../custom.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Martin Sjogard</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-posts" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Posts</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-posts">    
+        <li>
+    <a class="dropdown-item" href="../../posts/power-analysis-lmm/index.html">
+ <span class="dropdown-text">Power Analysis for LMMs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../posts/fwer-correction-part1/index.html">
+ <span class="dropdown-text">FWER Correction, background 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../posts/fwer-correction-part2/index.html">
+ <span class="dropdown-text">FWER Correction, background pt.&nbsp;2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../posts/kmeans-permutation/index.html">
+ <span class="dropdown-text">Developing a novel cluster number determination for K-means clustering</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#null-and-alternative-hypotheses" id="toc-null-and-alternative-hypotheses" class="nav-link active" data-scroll-target="#null-and-alternative-hypotheses">Null and Alternative Hypotheses</a></li>
+  <li><a href="#test-statistic" id="toc-test-statistic" class="nav-link" data-scroll-target="#test-statistic">Test Statistic</a></li>
+  <li><a href="#type-i-error-and-significance-level" id="toc-type-i-error-and-significance-level" class="nav-link" data-scroll-target="#type-i-error-and-significance-level">Type I Error and Significance Level</a></li>
+  <li><a href="#rejecting-h_0-what-does-it-mean" id="toc-rejecting-h_0-what-does-it-mean" class="nav-link" data-scroll-target="#rejecting-h_0-what-does-it-mean">Rejecting <span class="math inline">\(H_0\)</span>: What Does it Mean?</a></li>
+  <li><a href="#an-intuitive-introduction-to-p-values" id="toc-an-intuitive-introduction-to-p-values" class="nav-link" data-scroll-target="#an-intuitive-introduction-to-p-values">An Intuitive Introduction to p-Values</a></li>
+  <li><a href="#example-testing-a-coin-for-fairness-with-r-code" id="toc-example-testing-a-coin-for-fairness-with-r-code" class="nav-link" data-scroll-target="#example-testing-a-coin-for-fairness-with-r-code">Example: Testing a Coin for Fairness (with R code)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Permutation-Based FWER Correction, Part 1: Hypothesis Testing Fundamentals</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Statistics</div>
+    <div class="quarto-category">Neuroscience</div>
+    <div class="quarto-category">R</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Martin Sjogard </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 21, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>I very commonly get questions about nonparametric statistical control from collaborators, and I have been maintaining some personal notes that I tend to distribute to them on request. Here, I have modified them significantly with the intention of making them readable for the younger trainees who also ask me about these things. It should (hopefully) be readable for my collaborators of any background (psychology undergrads, physicians, engineers, neuroscientists).</p>
+<p>I will periodically update it with more of my notes. The notes start with establishing some common understanding of hypothesis testing, the concept of a test statistic, distributions of a repeated statistic under the null, and the need for thresholding, then walks (or rambles) through multiple comparisons as a concept, various resampling approaches, some permutation intuition, and finally to the permutation-based family-wise error rate correction and the maximum statistic. The goal is to have the reader think about how distributions are generated under specific constraints and assumptions, and how thresholding these distributions directly relate to the questions we’re asking of the data. I find that these permutation-based/non-parametric concepts manage what standard courses on parametric statistics taught in every psychology stats class never does: to instill statistical intuition in people.</p>
+<p>Before diving into permutation tests and error correction, it’s essential to establish a strong foundation in basic statistical inference. In this first post, I will cover the fundamentals of hypothesis testing: what hypotheses are, how we use test statistics, the meaning of Type&nbsp;I errors and significance levels, what it means to “reject <span class="math inline">\(H_0\)</span>,” and an intuitive introduction to p-values. I will also walk through a simple example (with R code) to illustrate these concepts in practice.</p>
+<section id="null-and-alternative-hypotheses" class="level2">
+<h2 class="anchored" data-anchor-id="null-and-alternative-hypotheses">Null and Alternative Hypotheses</h2>
+<p>A <strong>statistical hypothesis</strong> is a claim or conjecture about a population or process that can be tested with data. In hypothesis testing, we usually have two competing hypotheses:</p>
+<ul>
+<li><p><strong>Null hypothesis (<span class="math inline">\(H_0\)</span>)</strong>: This is the default or status quo hypothesis that there is no effect or no difference. It often represents a baseline assumption or “no change” scenario.</p></li>
+<li><p><strong>Alternative hypothesis (<span class="math inline">\(H_1\)</span> or <span class="math inline">\(H_A\)</span>):</strong>: This is the hypothesis that there is an effect, a difference, or a deviation from the null. It typically represents what we are trying to find evidence for.</p></li>
+</ul>
+<p>These two hypotheses are <em>complementary</em>: if one is true, the other is false. We design a test to decide whether the data provide sufficient evidence to <strong>reject <span class="math inline">\(H_0\)</span> in favor of <span class="math inline">\(H_1\)</span></strong>. Importantly, we begin by assuming <span class="math inline">\(H_0\)</span> is true (akin to “innocent until proven guilty” in a trial) and then ask whether the data are unlikely enough under that assumption to warrant rejecting it. The alternative hypothesis can be <em>one-sided</em> (e.g., an increase in mean, but not a decrease) or <em>two-sided</em> (any difference, either an increase or decrease).</p>
+<p><strong>A general example</strong>: Suppose we are testing a new drug.</p>
+<ul>
+<li><p><span class="math inline">\(H_0\)</span>: The drug has no effect on blood pressure (mean change = 0).</p></li>
+<li><p><span class="math inline">\(H_1\)</span>: The drug does have an effect (mean change ≠ 0).</p></li>
+</ul>
+<p><strong>A neuroimaging example</strong>: In a brain imaging study, we might test if a particular brain region is more active during a task than at rest.</p>
+<ul>
+<li><p><span class="math inline">\(H_0\)</span>: No difference in brain activity between task and rest in that region.</p></li>
+<li><p><span class="math inline">\(H_1\)</span>: A significant difference in activity exists between task and rest.</p></li>
+</ul>
+<p>In both cases, <span class="math inline">\(H_0\)</span> posits “no change/effect,” and <span class="math inline">\(H_1\)</span> posits “some change/effect.” The goal of the test is not to <em>prove</em> <span class="math inline">\(H_0\)</span> (we generally assume <span class="math inline">\(H_0\)</span> true until evidence shows otherwise), but rather to determine if we have enough evidence to reject <span class="math inline">\(H_0\)</span> and infer <span class="math inline">\(H_1\)</span>.</p>
+</section>
+<section id="test-statistic" class="level2">
+<h2 class="anchored" data-anchor-id="test-statistic">Test Statistic</h2>
+<p>To carry out a hypothesis test, we need a <strong>test statistic</strong> – a numerical summary of the data that we can use to decide between <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_1\)</span>. The test statistic is chosen based on the problem and hypotheses; it should capture the effect we are looking for. Common examples include:</p>
+<ul>
+<li><p>The difference between two group means (for testing if two groups differ).</p></li>
+<li><p>A proportion or count of “successes” (for testing rates or probabilities, like the number of heads in coin flips).</p></li>
+<li><p>A correlation coefficient (for testing association between variables).</p></li>
+</ul>
+<p>The key property of a test statistic is that we know (or can determine) its <em>probability distribution</em> when <span class="math inline">\(H_0\)</span> is true. This distribution under the null hypothesis is called the <strong>null distribution</strong> of the test statistic. Knowing the null distribution allows us to quantify how extreme our observed statistic is, assuming <span class="math inline">\(H_0\)</span> is correct. For example, if our test statistic is the number of heads in 100 coin flips and <span class="math inline">\(H_0\)</span> states the coin is fair, the null distribution of the statistic is a Binomial(100, 0.5) distribution (the distribution of heads counts for a fair coin).</p>
+<p><strong>Why do we need a test statistic?</strong> It provides a standardized way to evaluate evidence. Raw data can be messy, but a well-chosen statistic (like a mean difference or a <span class="math inline">\(t\)</span>-value) condenses the information into a single number that we can compare against a reference distribution. If the observed test statistic falls in a range that would be very unusual under <span class="math inline">\(H_0\)</span> (e.g., far in the tail of the null distribution), it suggests the data are not consistent with <span class="math inline">\(H_0\)</span>.</p>
+</section>
+<section id="type-i-error-and-significance-level" class="level2">
+<h2 class="anchored" data-anchor-id="type-i-error-and-significance-level">Type I Error and Significance Level</h2>
+<p>When making decisions based on data, we must acknowledge the possibility of errors. In hypothesis testing, there are two fundamental error types:</p>
+<ul>
+<li><p><strong>Type I error (false positive)</strong>: Rejecting the null hypothesis when it is actually true. In other words, a false alarm – we think we found an effect, but there is none. This is analogous to convicting an innocent person in a trial.</p></li>
+<li><p><strong>Type II error (false negative)</strong>: Failing to reject the null hypothesis when the alternative is true. In other words, a miss – there is a real effect, but our test failed to detect it. Analogously, a guilty person goes free due to lack of evidence.</p></li>
+</ul>
+<p>Because we never have absolute certainty (we rely on samples of data), we cannot eliminate these errors entirely. Instead, we control their probabilities. The <strong>significance level of a test</strong>, denoted <span class="math inline">\(\alpha\)</span>, is the probability of making a Type&nbsp;I error that we are willing to tolerate. Common choices are <span class="math inline">\(\alpha = 0.05\)</span> (5%) or <span class="math inline">\(\alpha = 0.01\)</span> (1%). For example, <span class="math inline">\(\alpha = 0.05\)</span> means that if <span class="math inline">\(H_0\)</span> is true, we are willing to accept a 5% chance of mistakenly rejecting it (5% false positive rate). In practical terms, <span class="math inline">\(\alpha=0.05\)</span> means that if <span class="math inline">\(H_0\)</span> is true, the kind of result we deem “significant” would be expected less than 5% of the time by random chance. Note! This is a common way to talk about these values in general but not strictly correct. When I discuss distributions and thresholds more later I will point out the issues with this phrasing.</p>
+<p>The significance level defines a <strong>threshold for significance</strong>: if the evidence against <span class="math inline">\(H_0\)</span> is strong enough that the probability of seeing such evidence under <span class="math inline">\(H_0\)</span> is less than <span class="math inline">\(\alpha\)</span>, we will reject <span class="math inline">\(H_0\)</span>. This threshold can be equivalently thought of in terms of critical values of the test statistic (more on that later) or p-values (coming up next).</p>
+<p>It’s important to note that <span class="math inline">\(\alpha\)</span> is set by the researcher <em>before</em> seeing the data. This prevents bias in deciding what is “significant.” The smaller <span class="math inline">\(\alpha\)</span> is, the more stringent the test (lower chance of false positive, but higher chance of missing a real effect, i.e., higher Type&nbsp;II error). In the context of multiple comparisons (many tests at once, as often occurs in neuroscience with many brain measurements), controlling the family-wise error rate is essentially about managing the overall Type&nbsp;I error – we’ll get to that in a later post.</p>
+<p>Side note: Continuing the courtroom analogy – if we treat “innocent until proven guilty” as <span class="math inline">\(H_0\)</span>, a Type&nbsp;I error is convicting an innocent person, and we set a high bar (stringent <span class="math inline">\(\alpha\)</span>) to avoid that. A Type&nbsp;II error is letting a guilty person go free. The significance level is like the “beyond a reasonable doubt” threshold: we decide how much evidence is enough to reject innocence. In hypothesis testing, <span class="math inline">\(\alpha\)</span> is our chosen threshold for doubt. For example, using <span class="math inline">\(\alpha = 0.01\)</span> is like requiring very strong evidence to convict, minimizing false convictions (Type&nbsp;I errors) at the expense of potentially acquitting more truly guilty defendants (some increased Type&nbsp;II errors).</p>
+</section>
+<section id="rejecting-h_0-what-does-it-mean" class="level2">
+<h2 class="anchored" data-anchor-id="rejecting-h_0-what-does-it-mean">Rejecting <span class="math inline">\(H_0\)</span>: What Does it Mean?</h2>
+<p>When we say “reject <span class="math inline">\(H_0\)</span>”, it means the sample data are sufficiently inconsistent with <span class="math inline">\(H_0\)</span> that we decide <span class="math inline">\(H_0\)</span> is unlikely to be true. In practice, rejecting <span class="math inline">\(H_0\)</span> implies accepting <span class="math inline">\(H_1\)</span> (or at least concluding that there is evidence in favor of <span class="math inline">\(H_1\)</span>). A result that leads to rejection is often called “statistically significant” at the chosen <span class="math inline">\(\alpha\)</span> level. This does not mean <span class="math inline">\(H_1\)</span> is proven true in all cases, only that <span class="math inline">\(H_0\)</span> is implausible given the data. We make this decision with a controlled Type&nbsp;I error rate (if <span class="math inline">\(H_0\)</span> is true, we’ll only mistakenly reject it <span class="math inline">\(\alpha\)</span> fraction of the time in repeated experiments).</p>
+<p>Conversely, if we “fail to reject <span class="math inline">\(H_0\)</span>,” it means the data did not provide strong enough evidence against <span class="math inline">\(H_0\)</span>. Important: Failing to reject is not the same as accepting <span class="math inline">\(H_0\)</span> as true – it simply means we do not have sufficient evidence to say it’s false. It’s possible that <span class="math inline">\(H_0\)</span> is false but our sample was not extreme enough (this would be a Type&nbsp;II error). Thus, “not significant” does not prove the null, it only indicates lack of evidence to reject it.</p>
+<p>In summary:</p>
+<ul>
+<li><p><strong>Reject <span class="math inline">\(H_0\)</span> (Significant result)</strong>: Data are unlikely under <span class="math inline">\(H_0\)</span> (p-value ≤ α). We infer evidence for <span class="math inline">\(H_1\)</span>.</p></li>
+<li><p><strong>Do not reject <span class="math inline">\(H_0\)</span> (Non-significant)</strong>: Data are not sufficiently unusual under <span class="math inline">\(H_0\)</span> (p-value &gt; α). We cannot conclude <span class="math inline">\(H_1\)</span>; <span class="math inline">\(H_0\)</span> remains plausible.</p></li>
+</ul>
+<p>This decision process ensures a controlled false positive rate. If <span class="math inline">\(H_0\)</span> is actually true, the chance we incorrectly reject it is α (by design). For example, with α = 0.05, over many repeated experiments with true nulls, about 5% would yield (erroneous) significant results just by chance.</p>
+</section>
+<section id="an-intuitive-introduction-to-p-values" class="level2">
+<h2 class="anchored" data-anchor-id="an-intuitive-introduction-to-p-values">An Intuitive Introduction to p-Values</h2>
+<p>Up to now, I’ve talked about “evidence” and outcomes being “unlikely under <span class="math inline">\(H_0\)</span>.” The tool that quantifies this is the p-value. We will give a precise definition in the next post, but conceptually: The p-value is a measure of how surprising the observed data would be if the null hypothesis were true. It answers the question: <em>“If <span class="math inline">\(H_0\)</span> is true, what is the probability of obtaining a result at least as extreme as what we observed?”</em></p>
+<p>A high p-value (say 0.5) means our result is quite ordinary under <span class="math inline">\(H_0\)</span> (nothing surprising). A very low p-value (say 0.001) means our result would be very rare if <span class="math inline">\(H_0\)</span> were true, indicating that either we saw a fluke or, more plausibly, <span class="math inline">\(H_0\)</span> is false. Some intuitive points about p-values:</p>
+<ul>
+<li><p><strong>Small p-value = evidence against <span class="math inline">\(H_0\)</span></strong>: If the data would hardly ever occur under <span class="math inline">\(H_0\)</span>, we have reason to doubt <span class="math inline">\(H_0\)</span>. For example, getting 95 heads out of 100 coin flips (p-value extremely small under a fair-coin hypothesis) strongly suggests the coin is not fair.</p></li>
+<li><p><strong>Moderate/large p-value = consistency with <span class="math inline">\(H_0\)</span></strong>: If the data are fairly typical under <span class="math inline">\(H_0\)</span>, we have no grounds to reject it. E.g., 52 heads out of 100 (p ≈ 0.39 for a fair coin) is quite a common outcome — nothing suspicious.</p></li>
+<li><p><strong>Threshold comparison</strong>: We compare the p-value to α. If p ≤ α, the result is statistically significant (reject <span class="math inline">\(H_0\)</span>); if p &gt; α, it’s not significant (fail to reject <span class="math inline">\(H_0\)</span>). This is equivalent to the critical-value approach but more directly answers the “how rare is this result under <span class="math inline">\(H_0\)</span>?” question.</p></li>
+<li><p><strong>One-tailed vs Two-tailed</strong>: The p-value calculation depends on <span class="math inline">\(H_1\)</span>. If <span class="math inline">\(H_1\)</span> is one-sided (e.g., an increase in mean), we calculate the probability of results as extreme as the observed in that direction. If <span class="math inline">\(H_1\)</span> is two-sided (any difference), we consider extremeness in both directions (e.g., both high and low extremes). Two-tailed tests essentially double-count the tail area corresponding to the observed result’s extremeness.</p></li>
+</ul>
+<p>A common misconception is that the p-value is the probability that <span class="math inline">\(H_0\)</span> is true given the data. <strong>This is NOT what the p-value represents</strong>. The p-value is calculated under the assumption that <span class="math inline">\(H_0\)</span> is true; it is <em>not</em> the probability of <span class="math inline">\(H_0\)</span> itself. It also isn’t the probability that <span class="math inline">\(H_1\)</span> is true. Instead, it’s about the data: assuming no real effect (<span class="math inline">\(H_0\)</span>), how surprising is what we observed? To cement these ideas, let’s walk through a simple example and see how to compute a p-value and make a decision.</p>
+</section>
+<section id="example-testing-a-coin-for-fairness-with-r-code" class="level2">
+<h2 class="anchored" data-anchor-id="example-testing-a-coin-for-fairness-with-r-code">Example: Testing a Coin for Fairness (with R code)</h2>
+<p>Imagine you have a coin and you suspect it might be biased (not fair). We can frame this as a hypothesis test:</p>
+<ul>
+<li><p><span class="math inline">\(H_0\)</span>: The coin is fair (probability of heads <span class="math inline">\(p = 0.5\)</span>).</p></li>
+<li><p><span class="math inline">\(H_1\)</span>: The coin is not fair (<span class="math inline">\(p \neq 0.5\)</span>, two-sided alternative).</p></li>
+</ul>
+<p>We decide to flip the coin <span class="math inline">\(n=20\)</span> times and count the number of heads. Our test statistic will be the number of heads in 20 flips. Under <span class="math inline">\(H_0\)</span> (fair coin), the null distribution of this statistic is <span class="math inline">\(\text{Binomial}(n=20, p=0.5)\)</span>. Let’s say we perform the experiment. Below is some R code to simulate the coin flips and conduct the test:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define number of flips</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate 20 coin flips (H = "heads", T = "tails")</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>flips <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"H"</span>, <span class="st">"T"</span>), <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>flips  <span class="co"># show the sequence of flips</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "H" "H" "T" "H" "H" "H" "H" "T" "H" "H" "T" "H" "H" "T" "T" "H" "H" "T" "T"
+[20] "H"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the number of heads</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>num_heads <span class="ot">&lt;-</span> <span class="fu">sum</span>(flips <span class="sc">==</span> <span class="st">"H"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>num_heads  <span class="co"># print the number of heads observed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform a two-sided test for fairness:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># H0: p = 0.5, H1: p != 0.5</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>test_result <span class="ot">&lt;-</span> <span class="fu">binom.test</span>(num_heads, n, <span class="at">p =</span> <span class="fl">0.5</span>, <span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>test_result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Exact binomial test
+
+data:  num_heads and n
+number of successes = 13, number of trials = 20, p-value = 0.2632
+alternative hypothesis: true probability of success is not equal to 0.5
+95 percent confidence interval:
+ 0.4078115 0.8460908
+sample estimates:
+probability of success 
+                  0.65 </code></pre>
+</div>
+</div>
+<p>Explanation: I used sample() to simulate 20 flips of a fair coin. I then count heads. The function binom.test() performs an exact binomial test for the null hypothesis <span class="math inline">\(p=0.5\)</span>. The output of binom.test will include a p-value.</p>
+<p>If you run this code, you’ll get a certain number of heads (because of randomness, it could be different each run). For instance, one simulation might yield num_heads = 12 out of 20. In that case, the test result will show a p-value (for 12 heads, p ≈ 0.503). This high p-value indicates 12/20 heads is very consistent with a fair coin (no evidence against <span class="math inline">\(H_0\)</span>). We would <em>fail to reject</em> <span class="math inline">\(H_0\)</span> at α = 0.05.</p>
+<p>Now, to see what a significant result would look like, let’s consider a more extreme outcome. Imagine we had observed num_heads = 17 out of 20. Intuitively, 17 heads in 20 flips is quite unlikely if the coin is fair. We can calculate the p-value for 17 heads:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute p-value for observing 17 or more heads out of 20 if p=0.5</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p_val <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbinom</span>(<span class="dv">17</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">size =</span> <span class="dv">20</span>, <span class="at">prob =</span> <span class="fl">0.5</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>p_val</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.001288414</code></pre>
+</div>
+</div>
+<p>This sums the probabilities of getting 17, 18, 19, or 20 heads under a fair coin (two-tailed test would also include the equally unlikely lower tail: 0–3 heads). The resulting one-tail probability for ≥17 heads is very small (around 0.0013), and doubling for two tails gives ~0.0026. Indeed, binom.test(17, 20, 0.5) would return p ≈ 0.0026. This p-value is <em>far below</em> 0.05, so such an outcome would be deemed <em>highly significant</em>. We would reject <span class="math inline">\(H_0\)</span> and conclude the coin is likely biased.</p>
+<p>To summarize the coin test example:</p>
+<ul>
+<li><p>If we observe a moderate number of heads (say 8, 10, 12, etc.), the p-value is high (well above 0.05). We do not have evidence to reject <span class="math inline">\(H_0\)</span>; the coin could well be fair.</p></li>
+<li><p>If we observe an extreme number of heads (like 17 out of 20), the p-value is very low (≪ 0.05). This is significant evidence against <span class="math inline">\(H_0\)</span>; we reject fairness and suspect the coin is biased.</p></li>
+<li><p>Our test controlled the Type&nbsp;I error at 5%. If the coin were actually fair, there’s only a 5% chance that we’d see a result as extreme as to falsely conclude bias.</p></li>
+</ul>
+<p>This simple example highlights how hypothesis testing works in practice: define <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_1\)</span>, choose a test statistic and significance level, collect data, compute a p-value (or compare to a critical value), and decide whether or not to reject <span class="math inline">\(H_0\)</span>. We used a <strong>p-value approach</strong> here (directly computing the probability of the observed outcome under <span class="math inline">\(H_0\)</span>). Alternatively, one could use a <strong>critical value approach</strong>: for instance, for α = 0.05 in the two-sided coin test, the critical region would be ≤3 heads or ≥17 heads (the most extreme 5% of the null distribution). Indeed, 17 heads was the cutoff — that’s why 17 gave p ~0.0026 (half of the 5% two-tailed region).</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
