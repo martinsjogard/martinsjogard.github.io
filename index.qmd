@@ -9,16 +9,13 @@ about:
   image-alt: Yellow brain
   image-shape: round
   links:
-    - text: "{{< iconify fa6-brands linkedin >}}"
+    - text: "{{< iconify fa linkedin-square>}}"
       href: https://www.linkedin.com/in/martinsjogard/
-    - icon: file-text
-      text: Google Scholar
+    - text: "{{< academicons google-scholar-square>}}"
       href: https://scholar.google.com/citations?hl=en&user=F59U3gEAAAAJ&view_op=list_works&sortby=pubdate
-    - icon: file-text
-      text: CV
+    - text: "{{< academicons cv-square>}}"
       href: CV_Martin_Sjogard.pdf
-    - icon: envelope
-      text: email
+    - text: "{{< fa-solid envelope>}}"
       href: mailto:martinsjogard@gmail.com
 
 ---
