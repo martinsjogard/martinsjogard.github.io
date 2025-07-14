@@ -2,7 +2,7 @@ project:
   type: website
   resources: 
         - CV_Martin_Sjogard.pdf
-extensions: [quarto-iconify-main]
+extensions: [iconify]
 
 website:
   title: "Martin Sjogard"
