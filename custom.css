@@ -1,0 +1,8 @@
+a {
+  text-decoration: none;   /* removes underline */
+  color: #1a0dab;          /* standard blue; adjust if needed */
+}
+
+a:hover {
+  text-decoration: underline;  /* optional: add underline on hover */
+}
