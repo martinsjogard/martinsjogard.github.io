@@ -35,6 +35,9 @@ format:
     theme: cosmo
     toc: true
     css: custom.css
+    include-in-header:
+      - text: |
+          <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     grid:
       sidebar-width: 300px
       body-width: 900px
