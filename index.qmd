@@ -1,5 +1,5 @@
 ---
-title: "Martin Sjogard | Brain and data stuff"
+title: "Martin Sjøgård | Brain and data stuff"
 subtitle: " "
 format: html
 
