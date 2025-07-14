@@ -11,11 +11,11 @@ about:
   links:
     - text: "{{< iconify fa linkedin-square>}}"
       href: https://www.linkedin.com/in/martinsjogard/
-    - text: "{{< academicons google-scholar-square>}}"
+    - text: "{{< iconify academicons google-scholar-square>}}"
       href: https://scholar.google.com/citations?hl=en&user=F59U3gEAAAAJ&view_op=list_works&sortby=pubdate
-    - text: "{{< academicons cv-square>}}"
+    - text: "{{< iconify academicons cv-square>}}"
       href: CV_Martin_Sjogard.pdf
-    - text: "{{< fa-solid envelope>}}"
+    - text: "{{< iconify fa-solid envelope>}}"
       href: mailto:martinsjogard@gmail.com
 
 ---
