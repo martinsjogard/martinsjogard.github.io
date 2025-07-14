@@ -1,6 +1,28 @@
 project:
   type: website
-  output-dir: _site
-  render:
-    - index.qmd
-    - about.qmd
+
+website:
+  title: "Martin Sjogard"
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Posts"
+        menu:
+          - text: "Power Analysis for LMMs"
+            href: posts/power-analysis-lmm/index.qmd
+          - text: "FWER Correction, background 1"
+            href: posts/fwer-correction-part1/index.qmd
+          - text: "FWER Correction, background pt. 2"
+            href: posts/fwer-correction-part2/index.qmd
+          - text: "Developing a novel cluster number determination for K-means clustering"
+            href: posts/kmeans-permutation/index.qmd
+    right:
+      - text: "About"
+        href: about.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    css: custom.css
