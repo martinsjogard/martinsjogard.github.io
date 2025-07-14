@@ -11,15 +11,6 @@ about:
   links:
     - text: "{{< iconify fa6-brands linkedin >}}"
       href: https://www.linkedin.com/in/martinsjogard/
-    - icon: file-text
-      text: Google Scholar
-      href: https://scholar.google.com/citations?hl=en&user=F59U3gEAAAAJ&view_op=list_works&sortby=pubdate
-    - icon: file-text
-      text: CV
-      href: CV_Martin_Sjogard.pdf
-    - icon: envelope
-      text: email
-      href: mailto:martinsjogard@gmail.com
 
 ---
 
