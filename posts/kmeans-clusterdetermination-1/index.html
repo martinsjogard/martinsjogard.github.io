@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Martin Sjogard">
+<meta name="dcterms.date" content="2025-01-21">
+
+<title>Part&nbsp;1: Foundations of Clustering and K-Means – Martin Sjogard</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a986a95301e671fce2c6472dffc862a1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Martin Sjogard</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-posts" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Posts</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-posts">    
+        <li>
+    <a class="dropdown-item" href="../../posts/power-analysis-lmm/index.html">
+ <span class="dropdown-text">Power Analysis for LMMs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../posts/fwer-correction-part1/index.html">
+ <span class="dropdown-text">FWER Correction, background 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../posts/fwer-correction-part2/index.html">
+ <span class="dropdown-text">FWER Correction, background pt.&nbsp;2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../posts/kmeans-permutation/index.html">
+ <span class="dropdown-text">Developing a novel cluster number determination for K-means clustering</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction-to-clustering" id="toc-introduction-to-clustering" class="nav-link active" data-scroll-target="#introduction-to-clustering">Introduction to Clustering</a></li>
+  <li><a href="#the-k-means-clustering-algorithm" id="toc-the-k-means-clustering-algorithm" class="nav-link" data-scroll-target="#the-k-means-clustering-algorithm">The K-Means Clustering Algorithm</a>
+  <ul class="collapse">
+  <li><a href="#intuition-and-objective" id="toc-intuition-and-objective" class="nav-link" data-scroll-target="#intuition-and-objective">Intuition and Objective</a></li>
+  <li><a href="#the-k-means-algorithm-steps" id="toc-the-k-means-algorithm-steps" class="nav-link" data-scroll-target="#the-k-means-algorithm-steps">The K-Means Algorithm Steps</a></li>
+  <li><a href="#distance-metric-and-space" id="toc-distance-metric-and-space" class="nav-link" data-scroll-target="#distance-metric-and-space">Distance Metric and Space</a></li>
+  <li><a href="#a-simple-demonstration-in-r" id="toc-a-simple-demonstration-in-r" class="nav-link" data-scroll-target="#a-simple-demonstration-in-r">A Simple Demonstration in R</a></li>
+  </ul></li>
+  <li><a href="#advantages-and-limitations-of-k-means" id="toc-advantages-and-limitations-of-k-means" class="nav-link" data-scroll-target="#advantages-and-limitations-of-k-means">Advantages and Limitations of K-Means</a></li>
+  <li><a href="#conclusion-part-1" id="toc-conclusion-part-1" class="nav-link" data-scroll-target="#conclusion-part-1">Conclusion (Part&nbsp;1)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Part&nbsp;1: Foundations of Clustering and K-Means</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Statistics</div>
+    <div class="quarto-category">Neuroscience</div>
+    <div class="quarto-category">R</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Martin Sjogard </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 21, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>I have been working a lot with k-means clustering, especially finding a good way to set the number of clusters (i.e., <em>k</em>). Some of the approaches are outright not useable for my specific use cases, while others are good in certain areas and bad in others. I’ve been using this blog space to formalize some thoughts while trying to develop alternative approaches to setting the appropriate <em>k</em>. Some background is provided first, to properly set the stage for the coming suggested changes to the current best models in use in the literature.</p>
+<section id="introduction-to-clustering" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-to-clustering">Introduction to Clustering</h2>
+<p>Clustering is the task of grouping a set of objects such that those in the same group (cluster) are more similar to each other than to those in other groups. In essence, a good clustering yields <strong>high intra-cluster</strong> similarity and <strong>low inter-cluster</strong> similarity. This is a form of <em>unsupervised learning</em>, meaning the data come without predefined category labels – the algorithm must discover any natural groupings. Humans intuitively cluster things all the time (e.g.&nbsp;grouping books by genre or animals by species), and clustering algorithms aim to mimic this by detecting structure in data without explicit guidance.</p>
+<p>Clustering has a rich history across disciplines. The concept originated in anthropology in the early 1930s and was introduced to psychology by Joseph Zubin (1938) and Robert Tryon (1939). Over decades, many clustering methods have been developed, from <em>hierarchical</em> algorithms that build tree-like partitions to <em>partitional</em> algorithms that directly partition data into a set number of clusters. The very notion of a “cluster” is somewhat philosophical: there isn’t a single rigorous definition, which is why dozens of clustering algorithms exist. Each algorithm embodies a different idea of what constitutes a cluster (compactness, density, connectedness, etc.) and is suited to different data shapes and contexts.</p>
+<p>In practice, clustering is a fundamental tool in exploratory data analysis, used in fields as diverse as biology (e.g.&nbsp;grouping cells by gene expression), marketing (segmenting customers), image analysis, and neuroscience. For example, neuroscientists might use clustering to group neurons with similar activity patterns, or to identify distinct patient subtypes from brain scan data. Philosophically, clustering touches on the problem of <strong>category formation</strong> – how to draw boundaries in a continuum of observations. The brain itself performs a form of clustering when it categorizes sensory inputs into perceptions (think of how we segment colors into discrete categories or group similar sounds into phonemes). Thus, beyond its mathematical formulation, clustering resonates with how we naturally seek patterns and order in the world.</p>
+</section>
+<section id="the-k-means-clustering-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="the-k-means-clustering-algorithm">The K-Means Clustering Algorithm</h2>
+<p>One of the most popular and straightforward partitional clustering methods is K-means clustering. K-means is a centroid-based clustering algorithm: it represents each cluster by the mean (centroid) of its members, and tries to find the optimal positions of these centroids.</p>
+<section id="intuition-and-objective" class="level3">
+<h3 class="anchored" data-anchor-id="intuition-and-objective">Intuition and Objective</h3>
+<p>Intuitively, K-means seeks to partition the data into **K clusters* (where K is a chosen constant) such that each data point belongs to the cluster with the nearest centroid. It’s like placing K points (“centers”) in the space and assigning each observation to the closest center; then moving the centers to the average of the points assigned to them, and repeating until things stabilize. The objective is to minimize the total within-cluster variance, often expressed as the within-cluster sum of squares (WCSS) or “inertia.” Formally, if we denote clusters by <span class="math inline">\(S_1, S_2, ..., S_K\)</span> and <span class="math inline">\(\mu_i\)</span> as the mean (centroid) of cluster <span class="math inline">\(i\)</span>, K-means aims to solve:</p>
+<p><span class="math display">\[
+\arg\min_{S_1, \ldots, S_K} \sum_{i=1}^{K} \sum_{\mathbf{x} \in S_i} \left\| \mathbf{x} - \boldsymbol{\mu}_i \right\|^2
+\]</span></p>
+<p>i.e.&nbsp;find the partition <span class="math inline">\(S = {S_1,\dots,S_K}\)</span> that minimizes the sum of squared Euclidean distances of points from their cluster centroids. This objective is a non-convex optimization problem, known to be NP-hard in general for an arbitrary number of clusters K. However, the beauty of K-means lies in a simple iterative heuristic (often called Lloyd’s algorithm or the K-means algorithm) that usually converges quickly to a good solution in practice.</p>
+</section>
+<section id="the-k-means-algorithm-steps" class="level3">
+<h3 class="anchored" data-anchor-id="the-k-means-algorithm-steps">The K-Means Algorithm Steps</h3>
+<p>The K-means algorithm works as follows:</p>
+<ul>
+<li><ol type="1">
+<li>Initialization: Choose K initial centroids. These can be selected randomly from the data points or via smarter schemes (like K-means++ which picks initial centers probabilistically to spread them out).</li>
+</ol></li>
+<li><ol start="2" type="1">
+<li>Assignment step: Assign each data point to the nearest centroid (using Euclidean distance). This forms K clusters based on current centroid locations.</li>
+</ol></li>
+<li><ol start="3" type="1">
+<li>Update step: For each cluster, recompute the centroid as the mean of all points assigned to that cluster (i.e.&nbsp;update <span class="math inline">\(\mu_i\)</span> to be the average of points in <span class="math inline">\(S_i\)</span>).</li>
+</ol></li>
+<li><ol start="4" type="1">
+<li>Repeat: Iterate the assignment and update steps until convergence – typically until no points change clusters or until the centroids move negligibly. At convergence, the algorithm has reached a locally optimal partition with respect to the objective.</li>
+</ol></li>
+</ul>
+<p>This iterative process is guaranteed to decrease the WCSS at each step and will eventually terminate (because there are a finite number of possible partitions). The output is a set of final cluster centroids and an assignment of each data point to one of the K clusters.</p>
+<p>Mathematically, you can show that in the update step, the choice of the mean minimizes the sum of squared distances: given a cluster assignment, the best centroid (in terms of minimizing squared distance) is the arithmetic mean of the points. This justifies using the mean in step 3. Thus, K-means alternates between fixing cluster memberships (to recompute means) and fixing means (to reassign memberships), which is a special case of the more general <em>Expectation-Maximization (EM)</em> procedure for Gaussian mixture models. The algorithm typically converges in a few iterations for moderate-sized datasets, though it is not guaranteed to find the global minimum of the objective (it finds a local minimum, which can depend on the initialization).</p>
+</section>
+<section id="distance-metric-and-space" class="level3">
+<h3 class="anchored" data-anchor-id="distance-metric-and-space">Distance Metric and Space</h3>
+<p><strong>Distance measure</strong>: K-means, as described, relies on <em>Euclidean distance</em> because the use of arithmetic mean as centroid implicitly assumes minimizing squared Euclidean distances. If one tried to use a different distance (say Manhattan <span class="math inline">\(L_1\)</span> distance), the centroid (minimizer) would no longer be the arithmetic mean – in fact for <span class="math inline">\(L_1\)</span> it would be the median. There are clustering variants like K-medians or K-medoids (PAM) that use other distance metrics and representative points (medoids), but standard K-means is inherently tied to Euclidean geometry.</p>
+<p><strong>Feature scaling</strong>: Because it uses distance, K-means is sensitive to the scale of features. It’s common to standardize or normalize features before clustering so that one feature doesn’t dominate due to larger numerical range. For example, if one feature is in units of dollars and ranges in the thousands while another is a ratio between 0 and 1, Euclidean distance would mostly reflect differences in the dollar feature unless we scale the data.</p>
+<p><strong>Data types</strong>: K-means requires numeric data in a metric space. It cannot handle categorical features directly (because means and Euclidean distances aren’t defined for categories). For non-numeric data or arbitrary distance measures, other clustering algorithms (hierarchical with custom distance, density-based clustering, etc.) are more appropriate. So, K-means is best suited for continuous-valued vector data where a notion of “cluster center” as a mean makes sense.</p>
+</section>
+<section id="a-simple-demonstration-in-r" class="level3">
+<h3 class="anchored" data-anchor-id="a-simple-demonstration-in-r">A Simple Demonstration in R</h3>
+<p>Let’s walk through a demonstration of K-means in R using the classic <strong>Iris dataset</strong>. This dataset (Fisher’s iris) has 150 samples of iris flowers, measured by 4 features (sepal length, sepal width, petal length, petal width) and known species labels (setosa, versicolor, virginica). We will ignore the species labels and see if K-means can discover the natural groupings. First, we load and inspect the data, then run K-means with K=3 (since we happen to know there are 3 species, we’ll use that for illustration). We’ll also scale the features for fair distance measurement:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the iris dataset and scale features</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>iris.features <span class="ot">&lt;-</span> <span class="fu">scale</span>(iris[, <span class="sc">-</span><span class="dv">5</span>])   <span class="co"># exclude the species column</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform K-means clustering with K = 3 clusters</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)  <span class="co"># for reproducibility</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>km3 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(iris.features, <span class="at">centers =</span> <span class="dv">3</span>, <span class="at">nstart =</span> <span class="dv">20</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Output the clustering result</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(km3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>K-means clustering with 3 clusters of sizes 50, 53, 47
+
+Cluster means:
+  Sepal.Length Sepal.Width Petal.Length Petal.Width
+1  -1.01119138  0.85041372   -1.3006301  -1.2507035
+2  -0.05005221 -0.88042696    0.3465767   0.2805873
+3   1.13217737  0.08812645    0.9928284   1.0141287
+
+Clustering vector:
+  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 3 3 3 2 2 2 3 2 2 2 2 2 2 2 2 3 2 2 2 2 3 2 2 2
+ [75] 2 3 3 3 2 2 2 2 2 2 2 3 3 2 2 2 2 2 2 2 2 2 2 2 2 2 3 2 3 3 3 3 2 3 3 3 3
+[112] 3 3 2 2 3 3 3 3 2 3 2 3 2 3 3 2 3 3 3 3 3 3 2 2 3 3 3 2 3 3 3 2 3 3 3 2 3
+[149] 3 2
+
+Within cluster sum of squares by cluster:
+[1] 47.35062 44.08754 47.45019
+ (between_SS / total_SS =  76.7 %)
+
+Available components:
+
+[1] "cluster"      "centers"      "totss"        "withinss"     "tot.withinss"
+[6] "betweenss"    "size"         "iter"         "ifault"      </code></pre>
+</div>
+</div>
+<p>Suppose the output is something like this (your numbers might differ slightly due to random initialization):</p>
+<p>Within cluster sum of squares by cluster: 15.151 23.879 39.820 (between_SS / total_SS = 88.4%)</p>
+<p>This tells us: the algorithm found 3 clusters with sizes 50, 38, and 62. The cluster means for each feature are listed (cluster 1 has smaller petal lengths and widths, etc., which we recognize as the setosa species characteristics, whereas clusters 2 and 3 correspond to versicolor and virginica mixes). The within-cluster sum of squares for each cluster is given (which sum up to the total WCSS), and it also reports that ~88.4% of the total variance is explained by the clustering (so the between-cluster SS is 88.4% of total SS). A high between-SS/total-SS means clusters are well-separated. This tells us: the algorithm found 3 clusters with sizes 50, 38, and 62. The cluster means for each feature are listed (cluster 1 has smaller petal lengths and widths, etc., which we recognize as the setosa species characteristics, whereas clusters 2 and 3 correspond to versicolor and virginica mixes). The within-cluster sum of squares for each cluster is given (which sum up to the total WCSS), and it also reports that ~88.4% of the total variance is explained by the clustering (so the between-cluster SS is 88.4% of total SS). A high between-SS/total-SS means clusters are well-separated.</p>
+<p>We can also examine the clustering assignment versus the true species:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare clusters to true species</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">Cluster =</span> km3<span class="sc">$</span>cluster, <span class="at">Species =</span> iris<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Species
+Cluster setosa versicolor virginica
+      1     50          0         0
+      2      0         39        14
+      3      0         11        36</code></pre>
+</div>
+</div>
+<p>Cluster 1 perfectly corresponds to Setosa (50/50 setosa in that cluster). Clusters 2 and 3 split Versicolor and Virginica: cluster 2 is mostly Virginica with a few Versicolor, and cluster 3 vice versa. This reflects that Versicolor and Virginica are more similar to each other, and indeed K-means (which doesn’t know the species labels) grouped some of them together. In fact, many clustering algorithms will have trouble separating versicolor vs virginica perfectly because their measurements overlap; Setosa, on the other hand, is distinct (and K-means clearly separated it). This illustrates both the capability and the limitation of clustering: it found meaningful structure (setosa vs non-setosa) but also shows that “ground truth” classes aren’t always cleanly separable by the available features</p>
+<p><strong>Visualization</strong>: We can visualize the clustered data. Since it’s 4-D, we’ll use the first two principal components for plotting. In R, we can plot the results (e.g.&nbsp;using <code>autoplot(km3, data=iris.features, frame=TRUE)</code> from the <code>ggfortify</code> package to plot in principal component space automatically). The clustering has partitioned the data into cohesive groups: points in the same cluster are closer to their centroid than to other centroids by construction.</p>
+</section>
+</section>
+<section id="advantages-and-limitations-of-k-means" class="level2">
+<h2 class="anchored" data-anchor-id="advantages-and-limitations-of-k-means">Advantages and Limitations of K-Means</h2>
+<p>K-means is popular for many reasons. Advantages include its simplicity and efficiency: the algorithm is easy to implement and understand (just loop between assignment and mean recomputation), and it’s computationally efficient, <span class="math inline">\(O(n \times K \times d)\)</span> per iteration (where n is number of points, d is dimension). It often converges in relatively few iterations, and can handle large datasets. It also tends to produce tighter, spherical clusters which are often desirable.</p>
+<p>However, K-means has important limitations and assumptions to be aware of:</p>
+<ul>
+<li><p><strong>You must choose K in advance</strong>: The algorithm requires the number of clusters K as input. Choosing the “right” K is a non-trivial task (this is the focus of Part 2). Without external guidance or careful evaluation, one might under- or over-cluster the data.</p></li>
+<li><p><strong>Sensitivity to initialization</strong>: Different random initial centroids can lead to different final clusters (because the algorithm can get stuck in different local minima of the objective). It’s common to run K-means multiple times (the <code>nstart</code> parameter in R) and take the best result. Methods like K-means++ help by providing a smarter initialization that often yields better results.</p></li>
+<li><p><strong>Assumes roughly spherical, equally sized clusters</strong>: K-means implicitly assumes clusters are convex and isotropic in the feature space. It tries to make clusters of comparable variance (because every cluster is represented by a centroid and distance threshold). If the true clusters are elongated, or irregularly shaped, or have hugely different sizes, K-means may perform poorly. For example, it may split one true cluster into two if it’s elongated, or merge two true clusters if one is much larger (dominates the mean) or if they’re close together. Hierarchical or density-based methods might capture such structures better.</p></li>
+<li><p><strong>Euclidean distance only / mean-based</strong>: As mentioned, K-means can’t handle arbitrary distance metrics or categorical data. All features contribute squared distance to the centroid. If your data has categorical variables or you want to use a custom distance metric (like cosine similarity for text vectors), standard K-means is not applicable (though you might use K-medoids or other algorithms designed for general distances).</p></li>
+<li><p><strong>Sensitive to outliers</strong>: The mean is not robust – even a single extreme outlier can pull a centroid significantly, affecting the cluster. K-means will assign outliers to the nearest cluster, but that can skew the centroid and degrade clustering of other points. If your data has outliers, sometimes a preprocessing step to remove or downweight them, or using a more robust clustering (like K-medoids which uses medians), is recommended.</p></li>
+<li><p><strong>Non-deterministic and local optima</strong>: Because of the random initialization and iterative improvement, K-means can end up in a suboptimal partition (a local minimum of the WCSS). In practice, repeated runs and choosing the best outcome is the standard approach to mitigate this. There are also global optimization variants and cluster ensemble methods if needed.</p></li>
+<li><p>**Scales poorly with very high-dimensional data*: In extremely high dimensions, distance measures become less informative (the “curse of dimensionality”). Points tend to all be nearly equidistant in high-D space, so the notion of nearest centroid gets noisy. K-means doesn’t inherently mitigate this, so it might not find meaningful clusters if d is very large unless you first apply dimension reduction (PCA, t-SNE, etc.). This isn’t unique to K-means, but it’s a general challenge for distance-based clustering.</p></li>
+</ul>
+<p>Despite these limitations, K-means often works surprisingly well on a wide variety of problems, especially when clusters are roughly spherical in feature space and well-separated. Its simplicity makes it a good baseline clustering method. In cases where its assumptions don’t hold, more advanced methods can be used, but K-means remains a workhorse for quick clustering tasks.</p>
+<p><strong>Alternatives</strong>: If you encounter some of the above issues, alternatives to consider include <em>hierarchical clustering</em> (which can use other distances and doesn’t require a fixed K upfront), DBSCAN (density-based, finds arbitrarily shaped clusters and can detect outliers as noise), <em>Gaussian mixture models</em> (soft clustering using probabilistic assignments and able to model different cluster shapes via covariance), K-medoids/PAM (uses medoids and any distance, more robust to outliers), among others. We won’t dive into these here, but it’s worth noting that K-means is one tool among many.</p>
+</section>
+<section id="conclusion-part-1" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion-part-1">Conclusion (Part&nbsp;1)</h2>
+<p>I’ve covered the foundations of clustering and the K-means algorithm, balancing an intuitive understanding with the formal objective. K-means exemplifies how a simple iterative process can produce meaningful structure from unlabelled data, but it also illustrates key challenges like choosing the number of clusters and handling various data peculiarities. In the next part, we’ll tackle the problem we left open: how do we determine the appropriate number of clusters (K) for K-means or any clustering? This is often called the “<span class="math inline">\(K\)</span> dilemma,” and as I will show, many methods have been proposed to resolve it.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
