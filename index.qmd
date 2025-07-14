@@ -18,11 +18,13 @@ about:
     - icon: file-text
       text: CV
       href: CV_Martin_Sjogard.pdf
+    - icon: envelope
+      href: mailto:martinsjogard@gmail.com
 
 ---
 
 ## About Me
-On the left is a high-resolution 3D printed copy of my own brain.
+The picture is a high-resolution 3D printed copy of my own brain.
 
 I am a clinical data scientist in the [Sleep, Cognition and Neuropsychology](https://manoachlab.mgh.harvard.edu/) lab at [Massachusetts General Hospital](https://www.massgeneral.org/) and a postdoctoral research fellow at [Harvard Medical School](https://hms.harvard.edu/).
 
