@@ -11,7 +11,7 @@ This is a non-technical (or at least less technical) summary of the paper "Incre
 
 
 ## Background: Learning and consolidation
-Motor tasks like the finger-tapping task are easy to use when studying memory, as they can be very standardized. In this case, *tap a sequence of five numbers on a keypad as quickly and accurately as you can for 30 seconds. Then rest 30 seconds and repeat for 12 total trials*. Instructions are simple, the task involved very little higher-level cognitive processing or sensory input, there's no language component, and it is not tiring. The outcome measures are easy to calculate and conceptualize, e.g. *the number of correctly typed sequences per trial* or *typing speed for correctly typed sequences*. Here we're studying the total amount of learning, so we calculate the percent increase in the amount of correct sequences typed from the first trial to the average of the last three trials.
+Motor tasks like the finger-tapping task (MST) are easy to use when studying memory, as they can be very standardized. In this case, *tap a sequence of five numbers on a keypad as quickly and accurately as you can for 30 seconds. Then rest 30 seconds and repeat for 12 total trials*. Instructions are simple, the task involved very little higher-level cognitive processing or sensory input, there's no language component, and it is not tiring. The outcome measures are easy to calculate and conceptualize, e.g. *the number of correctly typed sequences per trial* or *typing speed for correctly typed sequences*. Here we're studying the total amount of learning, so we calculate the percent increase in the amount of correct sequences typed from the first trial to the average of the last three trials.
 
 ![Fig. 1: Average trajectory of performance (N=26) across the 12 learning trials, measured in sequences per trial.](learning.png){width=350}
 
@@ -21,6 +21,22 @@ After completing the initial learning block of 12 trials, the participants took 
 
 ![Fig. 2: Average trajectory of performance (N=26) across the 12 learning trials, and during the 12 test trials after a 90 minute nap.](learning_and_consolidation.png){width=450}
 
-They get better! Participants have improved just by sleeping, by an average of 
+They get better! Participants have improved just by sleeping, by an average of 18%.
 
-Continued ...
+This is all in line with previous research. Sleep-dependent memory consolidation is a well studied phenomenon and both the initial learning rate and consolidation are about what we would expect. In order to discuss the actual research question of this paper we need to introduce some neuroimaging. Specifically, we need to talk about MEG and EEG, sleep spindles and the concept of cortical task activation. We can do all three by discussing what the previous literature had shown and what we found to be a critical missing piece of research.
+
+# MEG and EEG
+We wanted to measure participants' brain activity while they performed the MST and while they were sleeping, so that we could look at relationships between what happened in their brains while they were learning and while they were consolidating during the nap. We also had them come in one week earlier to measure their brain activity during a nap without any learning beforehand, as a baseline.
+
+# Sleep spindles and sleep spindle detection
+.
+
+# Task activation and the concept of a *task region*.
+.
+
+![Fig. 3: Individual studies had used each methodology, but none had used them all in combination.](venndiagram.png){width=450}
+
+
+
+
+
