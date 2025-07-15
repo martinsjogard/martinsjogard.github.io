@@ -6,3 +6,12 @@ a {
 a:hover {
   text-decoration: underline;  /* optional: add underline on hover */
 }
+
+/* Remove borders, background, and padding from about links */
+.quarto-about-jolla .about-link {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0 0.5rem 0 0;
+}
