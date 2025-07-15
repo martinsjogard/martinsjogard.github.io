@@ -1,6 +1,6 @@
 ---
-title: "Martin Sjøgård | Brain and data stuff"
-subtitle: " "
+title: "Martin Sjøgård"
+subtitle: "Neuroscience and data"
 format: html
 
 about: 
