@@ -12,14 +12,21 @@ website:
         href: index.qmd
       - text: "Posts"
         menu:
+          - text: "Quick paper summary: Sleep spindles, motor learning and sleep-dependent memory consolidation"
+            href: posts/quicksummaries_localspindles/index.qmd
+          - text: "Developing a novel cluster number determination for K-means clustering"
+            href: posts/kmeans-permutation/index.qmd
           - text: "Power Analysis for LMMs"
             href: posts/power-analysis-lmm/index.qmd
           - text: "FWER Correction, background pt. 1"
             href: posts/fwer-correction-part1/index.qmd
           - text: "FWER Correction, background pt. 2"
             href: posts/fwer-correction-part2/index.qmd
-          - text: "Developing a novel cluster number determination for K-means clustering"
-            href: posts/kmeans-permutation/index.qmd
+        - text: "Papers"
+        menu:
+          - text: "Quick paper summary: Sleep spindles, motor learning and sleep-dependent memory consolidation"
+            href: posts/quicksummaries_localspindles/index.qmd
+          
     right:
         - icon: linkedin
           href: https://www.linkedin.com/in/martinsjogard/
