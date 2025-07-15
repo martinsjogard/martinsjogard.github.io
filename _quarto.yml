@@ -26,7 +26,19 @@ website:
         menu:
           - text: "Quick paper summary: Sleep spindles, motor learning and sleep-dependent memory consolidation"
             href: posts/quicksummaries_localspindles/index.qmd
-          
+      - text: "Talks"
+        menu:
+          - text: "Disrupted ipsilateral encoding of motor sequence learning in Schizophrenia: spectral and hemispheric aspects"
+            href: posts/quicksummaries_localspindles/index.qmd
+          - text: "Schizophrenia patients learn normally but do not consolidate: A case for differential sleep spindle topography"
+            href: posts/quicksummaries_localspindles/index.qmd
+          - text: "Sleep spindle increases follow cortical patterns of task encoding"
+            href: posts/quicksummaries_localspindles/index.qmd
+          - text: "Sleep spindle increases and Task learning vs Sleep-dependent memory consolidation: Two topographically distinct relationships"
+            href: posts/quicksummaries_localspindles/index.qmd
+          - text: "Hippocampal ripples and memory"
+            href: posts/quicksummaries_localspindles/index.qmd
+
     right:
         - icon: linkedin
           href: https://www.linkedin.com/in/martinsjogard/
