@@ -21,7 +21,7 @@ about:
 ---
 
 ## About Me
-The picture you see is of a brain. More specifically a brain that studies other brains. It is a 3D printed copy of my own brain from an MRI scan. Here, that brain uses my body to write about brains. Or actually, mostly about statistics.
+The picture you see is a 3D printed copy of a brain. Here, that brain writes about other brains. Or actually, mostly about statistics.
 
 I am a clinical data scientist in the [Sleep, Cognition and Neuropsychology](https://manoachlab.mgh.harvard.edu/) lab at [Massachusetts General Hospital](https://www.massgeneral.org/) and a postdoctoral research fellow at [Harvard Medical School](https://hms.harvard.edu/).
 
