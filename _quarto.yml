@@ -24,6 +24,14 @@ website:
             href: posts/fwer-correction-part2/index.qmd
       - text: "Papers"
         menu:
+          - text: "Hippocampal ripples predict motor learning during brief rest breaks in humans"
+            href: https://www.nature.com/articles/s41467-025-61136-y
+          - text: "A novel approach to estimating the cortical sources of sleep spindles using simultaneous EEG/MEG"
+            href: https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2022.871166/full
+          - text: "Do the posterior midline cortices belong to the electrophysiological default-mode network?"
+            href: https://www.sciencedirect.com/science/article/abs/pii/S105381191930549X
+          - text: "Brain dysconnectivity relates to disability and cognitive impairment in multiple sclerosis"
+            href: https://onlinelibrary.wiley.com/doi/pdf/10.1002/hbm.25247
           - text: "Quick paper summary: Sleep spindles, motor learning and sleep-dependent memory consolidation"
             href: posts/quicksummaries_localspindles/index.qmd
       - text: "Talks"
