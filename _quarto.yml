@@ -13,7 +13,7 @@ website:
       - text: "Posts"
         menu:
           - text: "Quick paper summary: Sleep spindles, motor learning and sleep-dependent memory consolidation"
-            href: posts/quicksummaries_localspindles/index.qmd
+            href: posts/quicksummaries_localspindles/ind.qmd
           - text: "Developing a novel cluster number determination for K-means clustering"
             href: posts/kmeans-permutation/index.qmd
           - text: "Power Analysis for LMMs"
@@ -33,7 +33,7 @@ website:
           - text: "Brain dysconnectivity relates to disability and cognitive impairment in multiple sclerosis"
             href: https://onlinelibrary.wiley.com/doi/pdf/10.1002/hbm.25247
           - text: "Quick paper summary: Sleep spindles, motor learning and sleep-dependent memory consolidation"
-            href: posts/quicksummaries_localspindles/index.qmd
+            href: posts/quicksummaries_localspindles/ind.qmd
       - text: "Talks"
         menu:
           - text: "Disrupted ipsilateral encoding of motor sequence learning in Schizophrenia: spectral and hemispheric aspects"
