@@ -56,7 +56,7 @@ I received a PhD in Biomedical and Pharmaceutical Sciences at the [Université l
 ## Quick paper summaries
 Want a quick summary of what I’ve been working on? Interested in my research but don’t have time to read complicated and long papers? Are you a family member who’s interested but not that interested? A recruiter wanting to see what I’ve done? Look no further, these quick summaries of my papers will give you an overview without all the details. If you want all the details, the link to the full paper is inside.
 
-- **[Increased sleep spindles in regions engaged during motor learning predict memory consolidation](posts/quicksummaries_localspindles)
+- **[Increased sleep spindles in regions engaged during motor learning predict memory consolidation](posts/quicksummaries_localspind)
 - **[Hippocampal ripples predict motor learning during brief rest breaks in humans (2025)](https://www.nature.com/articles/s41467-025-61136-y)**
 
 ---
