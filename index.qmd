@@ -15,7 +15,7 @@ about:
       href: https://scholar.google.com/citations?hl=en&user=F59U3gEAAAAJ&view_op=list_works&sortby=pubdate
     - text: "{{< iconify academicons cv-square size=2x >}}"
       href: CV_Martin_Sjogard.pdf
-    - text: "{{< cib github size=2x >}}"
+    - text: "{{< iconify cib github size=2x >}}"
       href: https://github.com/martinsjogard/
     - text: "{{< iconify fa-solid envelope size=2x >}}"
       href: mailto:martinsjogard@gmail.com
