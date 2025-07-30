@@ -1,7 +1,7 @@
 project:
   type: website
   resources: 
-        - CV_Sjogard_Martin_generalized_biotech.pdf
+        - CV_Sjogard_Martin.pdf
 extensions: [iconify]
 
 website:
@@ -56,7 +56,7 @@ website:
           href: https://scholar.google.com/citations?user=F59U3gEAAAAJ&hl=en
         - icon: file-text
           text: CV
-          href: CV_Sjogard_Martin_generalized_biotech.pdf
+          href: CV_Sjogard_Martin.pdf
 
 format:
   html:
