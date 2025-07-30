@@ -14,7 +14,7 @@ about:
     - text: "{{< iconify academicons google-scholar-square size=2x >}}"
       href: https://scholar.google.com/citations?hl=en&user=F59U3gEAAAAJ&view_op=list_works&sortby=pubdate
     - text: "{{< iconify academicons cv-square size=2x >}}"
-      href: CV_Sjogard_Martin_generalized_biotech.pdf
+      href: CV_b.pdf
     - text: "{{< iconify cib github size=2x >}}"
       href: https://github.com/martinsjogard/
     - text: "{{< iconify fa-solid envelope size=2x >}}"
@@ -53,7 +53,7 @@ I received a PhD in Biomedical and Pharmaceutical Sciences at the [Université l
 - **[A novel approach to estimating the cortical sources of sleep spindles using simultaneous EEG/MEG (2022)](https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2022.871166/full)**  
   Dimitrios Mylonas\*, Martin Sjøgård\*, Zhaoyue Shi, Bryan Baxter, Matti Hämäläinen, Dara S Manoach, Sheraz Khan. *Frontiers in Neurology*, 13:871166
 
-- **[Full list of publications](CV_Sjogard_Martin_generalized_biotech.pdf)**
+- **[Full list of publications](AllPublications.pdf)**
 
 ---
 
