@@ -35,11 +35,16 @@ I received a PhD in Biomedical and Pharmaceutical Sciences at the [Université l
 
 ## Recently
 
-- Most learning on a motor task happens during the short periods of rest between trials (i.e. 'offline' learning). Do we also see higher hippocampal ripple rates during these periods? Do these hippocampal ripples correlate with the amount of offline learning? Spoiler alert! **[Our most recent paper was just published in Nature Communications](https://rdcu.be/euu5V)**  
+- 08/05/2025 : **[My most recent paper was just published in tje Journal of Neuroscience](https://www.jneurosci.org/content/early/2025/07/25/JNEUROSCI.0381-25.2025)** This one is all about sleep spindles. We know the amount of sleep spindles after learning is related to the amount of consolidation that happens, but does it matter whether these occur in regions that were active during learning the task?
+
+- 07/02/2025 : **[Our most recent paper was just published in Nature Communications](https://rdcu.be/euu5V)** While you may think most learning happens during active practice, that's actually not true: In bot humans and rats, most learning on a motor task happens during the short periods of rest between trials (i.e. 'offline' learning). Do we also see higher hippocampal ripple rates during these periods? Do these hippocampal ripples correlate with the amount of offline learning? Read to find out.
 
 ---
 
 ## Featured Publications
+
+- **[Increased sleep spindles in regions engaged during motor learning predict memory consolidation (2025)](https://www.jneurosci.org/content/early/2025/07/25/JNEUROSCI.0381-25.2025)**  
+  Martin Sjøgård*\*, Dimitrios Mylonas, Bryan Baxter, Zhaoyue Shi, Sheraz Khan, Charmaine Demanuele, Lin Zhu, Catherine Tocci, Robert Stickgold, Matti S. Hämäläinen,  Dara S. Manoach. *Journal of Neuroscience*
 
 - **[Hippocampal ripples predict motor learning during brief rest breaks in humans (2025)](https://www.nature.com/articles/s41467-025-61136-y)**  
   Martin Sjøgård*\*, Bryan Baxter, Dimitrios Mylonas, Megan Thompson, Kristi Kwok, Bailey Driscoll, Anabella Tolosa, Wen Shi, Robert Stickgold, Mark Vangel, Catherine J. Chu, Dara S. Manoach. *Nature Communications*, 16(6089)
